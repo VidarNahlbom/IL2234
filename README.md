@@ -4,5 +4,8 @@ There is also a Whattsapp group used for communication.
 
 ## Organization
 **Admin:** Vidar Nahlbom, vidarch@kth.se
+
 **Member**: Matyas Krejci, krejci@kth.se
+
+
 *TODO*: Add remaining members email.
