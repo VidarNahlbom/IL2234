@@ -1,0 +1,11 @@
+C:/Users/Redsh/Documents/IL2234/project/ALU.sv {1 {vlog -work work -vopt -sv -stats=none C:/Users/Redsh/Documents/IL2234/project/ALU.sv
+QuestaSim-64 vlog 2022.4 Compiler 2022.10 Oct 18 2022
+-- Compiling module ALU
+
+Top level modules:
+	ALU
+
+} {} {}} C:/Users/Redsh/Documents/IL2234/project/ALU_tb.sv {1 {vlog -work work -vopt -sv -stats=none C:/Users/Redsh/Documents/IL2234/project/ALU_tb.sv
+QuestaSim-64 vlog 2022.4 Compiler 2022.10 Oct 18 2022
+
+} {} {}}
