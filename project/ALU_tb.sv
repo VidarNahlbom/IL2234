@@ -20,8 +20,8 @@ logic [2:0] exp_flags;
 // test variables
 int test_count;
 int error_count;
-logic [3:0] signed_op_list[2];
-logic [3:0] unsigned_op_list[9];
+logic [3:0] unsigned_op_list[2];
+logic [3:0] signed_op_list[9];
 
 ALU #(.BW(BW)) DUT (
     .in_a(a),
