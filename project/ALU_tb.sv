@@ -127,12 +127,12 @@ task automatic test_and_log(
     end else begin
         status = "MISMATCH!";
         error_num++;
-        $error("Mismatch [Test #%0d - %s]: A=%h B=%h | DUT Out=%h Flags=%b | EXP Out=%h Flags=%b",
+        $error("Mismatch [Test #%0d - %s]: A=%b B=%b | DUT Out=%b Flags=%b | EXP Out=%b Flags=%b",
                 test_num, get_op_name(opcode), a, b, out, flags, exp_out, exp_flags);
     end
 
     // Write log
-    $fdisplay(file_handle, "%-5d | %-8s | %h | %h | %h | %b   | %h | %b   | %s",
+    $fdisplay(file_handle, "%-5d | %-8s | %b | %b | %b | %b   | %b | %b   | %s",
                 test_num, get_op_name(opcode), a, b, out, flags, exp_out, exp_flags, status);
 endtask
 
