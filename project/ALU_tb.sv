@@ -1,4 +1,4 @@
-`timescale 1ns/1ps
+`timescale 1ns/1ps // 1ns for timing and 1ps for simulation resolution
 module ALU_tb;
 
 parameter int BW = 4;
@@ -79,8 +79,61 @@ initial begin
     // Then randomized checking
 
     // We test 10 operands on each opcode
-
+    
+    $display("INFO: Starting the test of ADDITION. ");
     opcode = 4'b0000; // Addition
+    for ( i = 0; i < 10; i = i +1) begin
+
+        // Generating random values, Will be atomatically trucnated to BW .
+        a = $urandom;
+        b = $urandom;
+
+        // --- General idea for preforming the test ---
+        // 1. Preform addition
+        // 2. Validate the raised flags
+        // 3. validate output result
+
+        // 1. Preforming addition. Waiting for 10ns for the ALU to prefom addition, lower delay if applicable
+        #10ns
+
+        // 2. Validating flags
+
+        // Validating overflow flag
+
+        // If overflow is raised ensure it is correct
+        if (flags[2] == 1'b1) begin
+
+            // If the flag is raised yet no over flow is expected then throw a error
+            
+            // If both a and b is negative then their sum shall also be negative. I.E if MSB(a) == 1 & MSB(b) == 1 then MSB(out) == 1 
+            // Similarly of the MSB of both a and b is 0 then the MSB of out should be 0 since positive + positive = positive
+            // If this is not the case a overflow has occured
+            // if all 1  or all 0 everything is good, so flag is erronius
+            if (a[BW-1] & b[BW-1] & out[BW-1] | ~a[BW-1] & ~b[BW-1] & ~out[BW-1]) begin 
+
+                $display("ERROR: Overflow flag gave a false positive when preforming %b + %b = %b with flags %b", a, b, out, flags);
+
+            end
+        
+        // If overflow is not raised ensure that this is correct
+        end else begin 
+        
+            // If MSB of a and b are 1 but out is 0 then overflow occured. Or if MSB of a and b is 0 but out is 1 then a oveflow occured
+            if (a[BW-1] & b[BW-1] & ~out[BW-1] | ~a[BW-1] & ~b[BW-1] & out[BW-1]) begin
+
+                $display("ERROR: Overflow flag gave false negative when preforming %b + %b = %b with flags %b", a, b ,out, flags);
+
+            end
+
+        end
+
+
+        // Validatng negative flag.
+
+        // Simple if MSB out and flag match then all good
+        if (out[BW-1] )
+
+    end
     #10ns
 
     opcode = 4'b0001; // Subtraction
@@ -113,4 +166,3 @@ initial begin
     opcode = 4'b1111; // Passthrough B
 
 end
-
