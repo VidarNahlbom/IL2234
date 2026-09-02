@@ -3,6 +3,12 @@ module ALU_tb;
 
 parameter int BW = 4;
 
+// Defining plag positions here for ease of reading
+int FLAG_OVERFLOW = 2;
+int FLAG_NEGATIVE = 1;
+int FLAG_ZERO = 0;
+
+
 logic [BW-1:0] a;
 logic [BW-1:0] b;
 
@@ -82,7 +88,7 @@ initial begin
     
     $display("INFO: Starting the test of ADDITION. ");
     opcode = 4'b0000; // Addition
-    for ( i = 0; i < 10; i = i +1) begin
+    for (int i = 0; i < 10; i = i +1) begin
 
         // Generating random values, Will be atomatically trucnated to BW .
         a = $urandom;
@@ -101,7 +107,7 @@ initial begin
         // Validating overflow flag
 
         // If overflow is raised ensure it is correct
-        if (flags[2] == 1'b1) begin
+        if (flags[FLAG_OVERFLOW] === 1'b1) begin
 
             // If the flag is raised yet no over flow is expected then throw a error
             
@@ -111,7 +117,7 @@ initial begin
             // if all 1  or all 0 everything is good, so flag is erronius
             if (a[BW-1] & b[BW-1] & out[BW-1] | ~a[BW-1] & ~b[BW-1] & ~out[BW-1]) begin 
 
-                $display("ERROR: Overflow flag gave a false positive when preforming %b + %b = %b with flags %b", a, b, out, flags);
+                $error("ERROR: Overflow flag gave a false positive when preforming %b + %b = %b with flags %b", a, b, out, flags);
 
             end
         
@@ -121,7 +127,7 @@ initial begin
             // If MSB of a and b are 1 but out is 0 then overflow occured. Or if MSB of a and b is 0 but out is 1 then a oveflow occured
             if (a[BW-1] & b[BW-1] & ~out[BW-1] | ~a[BW-1] & ~b[BW-1] & out[BW-1]) begin
 
-                $display("ERROR: Overflow flag gave false negative when preforming %b + %b = %b with flags %b", a, b ,out, flags);
+                $error("ERROR: Overflow flag gave false negative when preforming %b + %b = %b with flags %b", a, b ,out, flags);
 
             end
 
@@ -131,9 +137,37 @@ initial begin
         // Validatng negative flag.
 
         // Simple if MSB out and flag match then all good
-        if (out[BW-1] )
+        if (out[BW-1] !== flags[FLAG_NEGATIVE] ) begin
 
+            $error("ERROR: Erroiusly raised negative flag, %b,  for output: %b", flags, out);
+
+        end
+
+        // Validating zero flag
+
+        //If the zero flag is raised check for false negative
+        if (flags[FLAG_ZERO] === 1'b1) begin
+            
+
+            if(out !== '0) begin
+                
+                $error("ERROR: False positive zero flag: %b , for output: %b", flags, out);
+
+            end
+
+        // If negative check for false negative
+        end else begin
+            
+            if(out !== '0) begin
+
+                $error("ERROR: False negative zero flag: %b , for output: %b", flags, out);
+
+            end
+
+        end
     end
+
+    $display("INFO: Addition veriifed sucesfully");
     #10ns
 
     opcode = 4'b0001; // Subtraction
