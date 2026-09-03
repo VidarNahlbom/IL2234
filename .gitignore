@@ -6,6 +6,7 @@
 
 # 3. Whitelist only the .gitignore and the files with YOUR code.
 !.gitignore
+!README.md
 !project/
 !project/ALU.sv
 !project/ALU_tb.sv
