@@ -6,6 +6,8 @@ module ALU #(parameter BW) (
     output logic [2:0] flags // {overflow, negative, zero}
 );
 
+    // TESTING GIT
+
     // Could add assigns here for 
     // assign N = BW-1;
     // assign msb_a = in_a[N];
