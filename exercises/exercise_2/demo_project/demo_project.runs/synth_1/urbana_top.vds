@@ -1,0 +1,522 @@
+INFO: [Common 17-3922] A valid Vivado Design Suite BASIC license has been detected. Your current license is active and will expire on 27-aug-2027.
+#-----------------------------------------------------------
+# Vivado v2026.1 (64-bit)
+# SW Build 6511674 on Tue Jun 16 11:02:23 MDT 2026
+# IP Build 6504888 on Tue Jun 09 09:05:25 MDT 2026
+# SharedData Build 6501428 on Mon Jun 08 17:34:18 MDT 2026
+# Start of session at: Thu Sep  3 08:31:33 2026
+# Process ID         : 9412
+# Current directory  : C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/demo_project/demo_project.runs/synth_1
+# Command line       : vivado.exe -log urbana_top.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source urbana_top.tcl
+# Log file           : C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/demo_project/demo_project.runs/synth_1/urbana_top.vds
+# Journal file       : C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/demo_project/demo_project.runs/synth_1\vivado.jou
+# Running On         : Warmind-Eir
+# Platform           : Windows 11
+# Operating System   : 26200
+# Processor Detail   : AMD Ryzen 7 5825U with Radeon Graphics         
+# CPU Frequency      : 1996 MHz
+# CPU Physical cores : 8
+# CPU Logical cores  : 16
+# Host memory        : 33667 MB
+# Swap memory        : 2147 MB
+# Total Virtual      : 35815 MB
+# Available Virtual  : 13594 MB
+#-----------------------------------------------------------
+source urbana_top.tcl -notrace
+create_project: Time (s): cpu = 00:00:22 ; elapsed = 00:00:16 . Memory (MB): peak = 582.008 ; gain = 270.047
+Command: synth_design -top urbana_top -part xc7s6ftgb196-1
+Starting synth_design
+Attempting to get a license for feature 'Vivado_Synthesis' and/or device 'xc7s6'
+INFO: [Common 17-349] Got license for feature 'Vivado_Synthesis' and/or device 'xc7s6'
+INFO: [Device 21-403] Loading part xc7s6ftgb196-1
+INFO: [Designutils 20-5008] Incremental synthesis strategy default
+INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 2 processes.
+INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
+INFO: [Synth 8-7075] Helper process launched with PID 24700
+---------------------------------------------------------------------------------
+Starting RTL Elaboration : Time (s): cpu = 00:00:11 ; elapsed = 00:00:14 . Memory (MB): peak = 1301.945 ; gain = 577.883
+---------------------------------------------------------------------------------
+INFO: [Synth 8-6157] synthesizing module 'urbana_top' [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/rtl/urbana_top.sv:1]
+INFO: [Synth 8-6155] done synthesizing module 'urbana_top' (0#1) [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/rtl/urbana_top.sv:1]
+WARNING: [Synth 8-3330] design urbana_top has an empty top module
+WARNING: [Synth 8-7129] Port CLK_100MHZ in module urbana_top is either unconnected or has no load
+---------------------------------------------------------------------------------
+Finished RTL Elaboration : Time (s): cpu = 00:00:15 ; elapsed = 00:00:18 . Memory (MB): peak = 1420.125 ; gain = 696.062
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:15 ; elapsed = 00:00:18 . Memory (MB): peak = 1420.125 ; gain = 696.062
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:15 ; elapsed = 00:00:18 . Memory (MB): peak = 1420.125 ; gain = 696.062
+---------------------------------------------------------------------------------
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 1420.125 ; gain = 0.000
+INFO: [Project 1-570] Preparing netlist for logic optimization
+
+Processing XDC Constraints
+Initializing timing engine
+Parsing XDC File [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc]
+WARNING: [Vivado 12-584] No ports matched 'BTN[0]'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:48]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:48]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'BTN[1]'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:49]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:49]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'BTN[2]'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:50]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:50]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'BTN[3]'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:51]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:51]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'RGB0[0]'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:54]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:54]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'RGB0[1]'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:55]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:55]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'RGB0[2]'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:56]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:56]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'RGB1[0]'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:57]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:57]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'RGB1[1]'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:58]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:58]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'RGB1[2]'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:59]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:59]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'D0_AN[0]'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:62]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:62]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'D0_AN[1]'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:63]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:63]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'D0_AN[2]'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:64]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:64]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'D0_AN[3]'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:65]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:65]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'D0_SEG[0]'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:66]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:66]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'D0_SEG[1]'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:67]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:67]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'D0_SEG[2]'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:68]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:68]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'D0_SEG[3]'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:69]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:69]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'D0_SEG[4]'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:70]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:70]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'D0_SEG[5]'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:71]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:71]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'D0_SEG[6]'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:72]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:72]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'D0_SEG[7]'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:73]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:73]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'D1_AN[0]'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:76]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:76]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'D1_AN[1]'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:77]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:77]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'D1_AN[2]'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:78]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:78]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'D1_AN[3]'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:79]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:79]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'D1_SEG[0]'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:80]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:80]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'D1_SEG[1]'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:81]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:81]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'D1_SEG[2]'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:82]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:82]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'D1_SEG[3]'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:83]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:83]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'D1_SEG[4]'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:84]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:84]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'D1_SEG[5]'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:85]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:85]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'D1_SEG[6]'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:86]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:86]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'D1_SEG[7]'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:87]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:87]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'HDMI_DO_P'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:90]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:90]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'HDMI_D0_N'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:91]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:91]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'HDMI_D1_P'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:92]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:92]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'HDMI_D1_N'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:93]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:93]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'HDMI_D2_P'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:94]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:94]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'HDMI_D2_N'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:95]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:95]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'HDMI_CLK_P'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:96]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:96]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'HDMI_CLK_N'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:97]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:97]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'HDMI_CEC_IN'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:98]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:98]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'HDMI_HPD'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:99]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:99]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'HDMI_I2C_SCL'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:100]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:100]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'HDMI_I2C-SDA'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:101]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:101]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'USB_SPI_MISO'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:104]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:104]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'USB_SPI_MOSI'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:105]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:105]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'USB_SPI_CCLK'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:106]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:106]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'USB_SS_B'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:107]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:107]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'USB_RESET_B'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:108]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:108]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'USB_INT'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:109]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:109]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'SD_DQ0'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:112]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:112]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'SD_DQ1'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:113]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:113]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'SD_DQ2'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:114]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:114]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'SD_DQ3'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:115]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:115]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'SD_CMD'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:116]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:116]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'SD_CLK'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:117]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:117]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'SD_CD_N'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:118]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:118]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'SPKL'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:121]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:121]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'SPKR'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:122]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:122]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'MIC_CLK'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:125]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:125]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'MIC_DATA'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:126]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:126]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'AD1_P'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:129]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:129]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'AD1_N'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:130]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:130]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'AD15_P'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:131]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:131]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'AD15_N'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:132]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:132]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'SEL_JOYSTICK'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:133]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:133]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'BLE_UART_TXD'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:136]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:136]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'BLE_UART_RXD'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:137]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:137]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'BLE_UART_RTS'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:138]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:138]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'BLE_UART_CTS'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:139]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:139]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'UART_TXD'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:140]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:140]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'UART_RXD'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:141]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:141]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'QSPI_DQ0'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:144]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:144]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'QSPI_DQ1'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:145]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:145]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'QSPI_DQ2'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:146]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:146]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'QSPI_DQ3'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:147]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:147]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'QSPI_CS_B'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:148]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:148]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'QSPI_RESET_B'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:149]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:149]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'SERVO0'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:152]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:152]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'SERVO1'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:153]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:153]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'SERVO2'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:154]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:154]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'SERVO3'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:155]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:155]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'JA1_P'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:158]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:158]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'JA1_N'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:159]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:159]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'JA2_P'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:160]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:160]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'JA2_N'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:161]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:161]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'JA3_P'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:162]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:162]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'JA3_N'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:163]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:163]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'JA4_P'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:164]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:164]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'JA4_N'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:165]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:165]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'JB1_P'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:168]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:168]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'JB1_N'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:169]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:169]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'JB2_P'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:170]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:170]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'JB2_N'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:171]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:171]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'JB3_P'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:172]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:172]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'JB3_N'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:173]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:173]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'JB4_P'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:174]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:174]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'JB4_N'. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:175]
+INFO: [Common 17-14] Message 'Vivado 12-584' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:175]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:175]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+CRITICAL WARNING: [Common 17-163] Missing value for option 'objects', please type 'set_property -help' for usage info. [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc:463]
+Finished Parsing XDC File [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc]
+INFO: [Project 1-236] Implementation specific constraints were found while reading constraint file [C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/il2234-lab-demo/constraints/urbana.xdc]. These constraints will be ignored for synthesis but will be used in implementation. Impacted constraints are listed in the file [.Xil/urbana_top_propImpl.xdc].
+Resolution: To avoid this warning, move constraints listed in [.Xil/urbana_top_propImpl.xdc] to another XDC file and exclude this new file from synthesis with the used_in_synthesis property (File Properties dialog in GUI) and re-run elaboration/synthesis.
+Completed Processing XDC Constraints
+
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 1420.125 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Constraint Validation Runtime : Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.007 . Memory (MB): peak = 1420.125 ; gain = 0.000
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:32 ; elapsed = 00:00:36 . Memory (MB): peak = 1420.125 ; gain = 696.062
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xc7s6ftgb196-1
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:32 ; elapsed = 00:00:36 . Memory (MB): peak = 1420.125 ; gain = 696.062
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying 'set_property' XDC Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:32 ; elapsed = 00:00:36 . Memory (MB): peak = 1420.125 ; gain = 696.062
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:32 ; elapsed = 00:00:37 . Memory (MB): peak = 1420.125 ; gain = 696.062
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+Detailed RTL Component Info : 
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 10 (col length:20)
+BRAMs: 10 (col length: RAMB18 20 RAMB36 10)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Cross Boundary and Area Optimization
+---------------------------------------------------------------------------------
+WARNING: [Synth 8-3330] design urbana_top has an empty top module
+WARNING: [Synth 8-7129] Port CLK_100MHZ in module urbana_top is either unconnected or has no load
+---------------------------------------------------------------------------------
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:37 ; elapsed = 00:00:42 . Memory (MB): peak = 1450.090 ; gain = 726.027
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying XDC Timing Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:47 ; elapsed = 00:00:52 . Memory (MB): peak = 1623.250 ; gain = 899.188
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:00:47 ; elapsed = 00:00:52 . Memory (MB): peak = 1623.250 ; gain = 899.188
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:00:47 ; elapsed = 00:00:52 . Memory (MB): peak = 1632.805 ; gain = 908.742
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:00:56 ; elapsed = 00:01:01 . Memory (MB): peak = 1908.770 ; gain = 1184.707
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:56 ; elapsed = 00:01:01 . Memory (MB): peak = 1908.770 ; gain = 1184.707
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Rebuilding User Hierarchy
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:56 ; elapsed = 00:01:01 . Memory (MB): peak = 1908.770 ; gain = 1184.707
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:56 ; elapsed = 00:01:01 . Memory (MB): peak = 1908.770 ; gain = 1184.707
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:56 ; elapsed = 00:01:01 . Memory (MB): peak = 1908.770 ; gain = 1184.707
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Nets
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:56 ; elapsed = 00:01:02 . Memory (MB): peak = 1908.770 ; gain = 1184.707
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+Report BlackBoxes: 
++-+--------------+----------+
+| |BlackBox name |Instances |
++-+--------------+----------+
++-+--------------+----------+
+
+Report Cell Usage: 
++------+-----+------+
+|      |Cell |Count |
++------+-----+------+
+|1     |IBUF |    16|
+|2     |OBUF |    16|
++------+-----+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:56 ; elapsed = 00:01:02 . Memory (MB): peak = 1908.770 ; gain = 1184.707
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 2 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:37 ; elapsed = 00:00:57 . Memory (MB): peak = 1908.770 ; gain = 1184.707
+Synthesis Optimization Complete : Time (s): cpu = 00:00:56 ; elapsed = 00:01:02 . Memory (MB): peak = 1908.770 ; gain = 1184.707
+INFO: [Project 1-571] Translating synthesized netlist
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 1918.012 ; gain = 0.000
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 1921.629 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Synth Design complete | Checksum: 8642fc27
+INFO: [Common 17-83] Releasing license: Vivado_Synthesis
+17 Infos, 104 Warnings, 101 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:01:04 ; elapsed = 00:01:47 . Memory (MB): peak = 1921.629 ; gain = 1339.621
+INFO: [runtcl-6] Synthesis results are not added to the cache due to CRITICAL_WARNING
+Write ShapeDB Complete: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.002 . Memory (MB): peak = 1921.629 ; gain = 0.000
+INFO: [Common 17-1381] The checkpoint 'C:/Users/Redsh/Documents/IL2234/exercises/exercise_2/demo_project/demo_project.runs/synth_1/urbana_top.dcp' has been generated.
+INFO: [Vivado 12-24828] Executing command : report_utilization -file urbana_top_utilization_synth.rpt -pb urbana_top_utilization_synth.pb
+INFO: [Common 17-206] Exiting Vivado at Thu Sep  3 08:33:44 2026...

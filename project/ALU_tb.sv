@@ -182,6 +182,11 @@ initial begin
         end
     end
 
+    // Then random opcodes
+    for (int j = 0; j < 10; j++) begin
+        test_and_log($random, $random, $random, test_count, error_count);
+    end
+
     $fdisplay(file_handle, "-------------------------------------------------------------------------------------------------");
     $fdisplay(file_handle, "TOTAL TESTS: %0d | TOTAL ERRORS: %0d", test_count, error_count);
     $display("Done. Executed %0d tests with %0d errors. Log saved to 'alu_tb_results.txt'.", test_count, error_count);

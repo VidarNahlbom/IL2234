@@ -1,5 +1,17 @@
-# Compile of ALU.sv failed with 6 errors.
 # Compile of ALU_tb.sv was successful.
-# 2 compiles, 1 failed with 6 errors.
-# Compile of ALU.sv failed with 5 errors.
-# Compile of ALU.sv was successful.
+# Compile of ALU_tb.sv was successful.
+vsim -gui work.ALU_tb
+# vsim -gui work.ALU_tb 
+# Start time: 16:28:14 on Sep 02,2026
+# ** Note: (vsim-3813) Design is being optimized due to module recompilation...
+# Loading sv_std.std
+# Loading work.ALU_tb(fast)
+run -all
+# Running 10 tests per opcode
+# Done. Executed 120 tests with 0 errors. Log saved to 'alu_tb_results.txt'.
+# ** Note: $finish    : C:/Users/Redsh/Documents/IL2234/project/ALU_tb.sv(195)
+#    Time: 1200 ns  Iteration: 0  Instance: /ALU_tb
+# 1
+# Break at C:/Users/Redsh/Documents/IL2234/project/ALU_tb.sv line 195
+# End time: 16:56:25 on Sep 02,2026, Elapsed time: 0:28:11
+# Errors: 0, Warnings: 4
