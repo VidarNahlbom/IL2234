@@ -1,6 +1,11 @@
-/*.*
+# 1. Ignorera ALLT i hela projektet som standard
+*
 
-# Whitelist some files
+# 2. Tillåt Git att gå ner i undermappar (Crtical!)
+!*/
+
+# 3. Whitelista bara dina specifika filer och .gitignore själv
 !.gitignore
-!./project/ALU.sv
-!./project/ALU_tb.sv
+!project/
+!project/ALU.sv
+!project/ALU_tb.sv
