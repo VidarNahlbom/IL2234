@@ -11,3 +11,4 @@
 !project/ALU.sv
 !project/ALU_tb.sv
 !project/register.sv
+!project/register_block.sv

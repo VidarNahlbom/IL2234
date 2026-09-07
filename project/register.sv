@@ -1,5 +1,8 @@
 
-// Module meant to simualte two registers
+// Import the register block module
+
+// Module meant to simualte the registers of a RISC V processor. Coure nomenclature said this is to be called register.
+// Not to be confused with register_block witch is a singular register.
 module register #(parameter BW, parameter DEPTH) (
 //--------------------INPUTS--------------------
     input logic clk,                            // Clock input
@@ -15,6 +18,16 @@ module register #(parameter BW, parameter DEPTH) (
     output logic [BW-1:0] data_out_2            // data output for port 2
 );
 
+
+// Declare the registers as a separate list of signals
+
+// Implement memory fucntionality using always_ff block
+// Alter lacth state on the rising clock edge or falling reset edge, so listen for those
+always_ff @(posedge clk or negedge rst_n) begin
+
+
+
+end
 
 
 endmodule
