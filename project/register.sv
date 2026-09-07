@@ -47,6 +47,5 @@ generate
 
 endgenerate
 
-// Now 
 
 endmodule
