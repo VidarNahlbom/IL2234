@@ -3,8 +3,8 @@
 module register_block #(parameter BW) (
     // ----------INPUTS-------------
     input logic clk,                // clock signal
-    input logic reset,              // Resets the registers output to all 0
-    input logic write,              // Witrte signal to read state, commonly also called enable
+    input logic reset,              // Resets the registers output to all 0, Active LOW
+    input logic write,              // Witrte signal to read state, commonly also called enable, Active LOW
     input logic [BW-1:0] data_in,   // Input data to be read on the rising edge of the clock if write enabled
     // ----------OUTPUTS------------
     output logic [BW-1:0] out
@@ -20,7 +20,7 @@ always_ff @(posedge clk or negedge reset) begin
 
         out <= 'b0;
     // Handle a write event
-    end else if (write) begin
+    end else if (!write) begin
         
         out <= data_in;
 

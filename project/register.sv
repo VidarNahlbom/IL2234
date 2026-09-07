@@ -19,15 +19,34 @@ module register #(parameter BW, parameter DEPTH) (
 );
 
 
-// Declare the registers as a separate list of signals
+// Usning generate I can tell the simulator to make a desiered number of copies from a given circuit/module
+// Make a array from all the registers wirite_enables and outputs. This way data is easely routed.
 
-// Implement memory fucntionality using always_ff block
-// Alter lacth state on the rising clock edge or falling reset edge, so listen for those
-always_ff @(posedge clk or negedge rst_n) begin
+logic write_enables [DEPTH];
+logic [BW-1:0] outputs [DEPTH];
 
+// Ensuring that reading from 0 always returns a 0 and not XS
+assign outputs[0] = 'b0;
 
+// Generate the desiered number of register instances
+// Starting frrom i = 1 since address 0 is harwiered to 0.
+// Remeber address = 0 is handled separately
+generate
+    for (genvar i = 1; i < DEPTH-1 ; i++ ) begin
 
-end
+        // A instance of  the singular register
+        register_block #(.BW(BW)) internal_reg (
+            .clk(clk),
+            .reset(rst_n),
+            .write(write_enables[i]),
+            .data_in(data_in),
+            .out(outputs[i])
+        );
+        
+    end
 
+endgenerate
+
+// Now 
 
 endmodule
