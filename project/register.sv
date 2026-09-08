@@ -25,14 +25,14 @@ module register #(parameter BW, parameter DEPTH) (
 logic write_enables [DEPTH];
 logic [BW-1:0] outputs [DEPTH];
 
-// Ensuring that reading from 0 always returns a 0 and not XS
+// Ensuring that reading from 0 always returns a 0 and not X or Z
 assign outputs[0] = 'b0;
 
 // Generate the desiered number of register instances
 // Starting frrom i = 1 since address 0 is harwiered to 0.
 // Remeber address = 0 is handled separately
 generate
-    for (genvar i = 1; i < DEPTH-1 ; i++ ) begin
+    for (genvar i = 1; i < DEPTH; i++ ) begin
 
         // A instance of  the singular register
         register_block #(.BW(BW)) internal_reg (
@@ -46,6 +46,33 @@ generate
     end
 
 endgenerate
+
+// Since the routing of data does not depend on prior inputs the always_comb block is used.
+always_comb begin
+    
+    // Ensure outputs are 0 if the chip is disabled
+    if (!chip_en) begin
+        
+        data_out_1 = 'b0;
+        data_out_2 = 'b0;
+    
+    // If the chip is enabled then the the outputs are determined by the corresponding address provided.
+    end else begin
+        
+        data_out_1 = outputs[read_addr_1];
+        data_out_2 = outputs[read_addr_2];
+
+    end
+
+    write_enables = '{default: 1'b1};
+
+    // Now to handle the writing. The chip not only has to be enabled but writing has to be enabled again.
+    if (!write_en_n && chip_en && (write_addr != 0)) begin
+        write_enables[write_addr] = '1;
+    end 
+
+
+end
 
 
 endmodule
