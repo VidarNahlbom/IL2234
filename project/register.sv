@@ -68,7 +68,7 @@ always_comb begin
 
     // Now to handle the writing. The chip not only has to be enabled but writing has to be enabled again.
     if (!write_en_n && chip_en && (write_addr != 0)) begin
-        write_enables[write_addr] = '1;
+        write_enables[write_addr] = 1'b0;
     end 
 
 
