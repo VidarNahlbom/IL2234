@@ -7,5 +7,11 @@
 # 3. Whitelista bara dina specifika filer och .gitignore själv
 !.gitignore
 !project/
-!project/ALU.sv
-!project/ALU_tb.sv
+!project/ALU
+!project/ALU/ALU_tb.sv
+project/ALU/ALU.sv
+project/ALU/Milestone 1.pdf
+project/Registers
+project/Registers/register_block.sv
+project/Registers/register_tb.sv
+project/Registers/register.sv
