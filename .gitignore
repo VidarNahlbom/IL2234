@@ -9,9 +9,11 @@
 !project/
 !project/ALU
 !project/ALU/ALU_tb.sv
-project/ALU/ALU.sv
-project/ALU/Milestone 1.pdf
-project/Registers
-project/Registers/register_block.sv
-project/Registers/register_tb.sv
-project/Registers/register.sv
+!project/ALU/ALU.sv
+!project/ALU/Milestone 1.pdf
+!project/Registers
+!project/Registers/register_block.sv
+!project/Registers/register_tb.sv
+!project/Registers/register.sv
+!project/ALU/ALU_Exhaustive_TestBench.sv
+!project/ALU/ALU_TestBench_source.sv
