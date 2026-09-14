@@ -6,6 +6,7 @@ There is also a Whattsapp group used for communication.
 **Admin:** Vidar Nahlbom, vidarch@kth.se
 
 **Member**: Matyas Krejci, krejci@kth.se
+
 **Member**: Krithika Suresh, ksur@kth.se
 
 
