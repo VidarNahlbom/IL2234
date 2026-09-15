@@ -10,9 +10,9 @@ module register_file #(parameter BW, parameter DEPTH) (
     input logic write_en_n,                     // Active low write enable
     input logic chip_en,                        // Active high chip enable
     input logic [BW-1:0] data_in,               // Data input port
-    input logic [$clog2(DEPTH)-1] read_addr_1,    // Address for output port 1
-    input logic [$clog2(DEPTH)-1] read_addr_2,    // Address for output port 2
-    input logic [$clog2(DEPTH)-1] write_addr,     // Address for input port
+    input logic [$clog2(DEPTH)-1:0] read_addr_1,    // Address for output port 1
+    input logic [$clog2(DEPTH)-1:0] read_addr_2,    // Address for output port 2
+    input logic [$clog2(DEPTH)-1:0] write_addr,     // Address for input port
     //--------------------OUTPUTS--------------------
     output logic [BW-1:0] data_out_1,           // Data output for port 1
     output logic [BW-1:0] data_out_2            // data output for port 2

@@ -1,6 +1,6 @@
 
 // Testbech used in order to validate the functionality of the register module
-module register_tb;
+module register_file_tb;
 
     // Circuit parameters
     parameter BW = 4;                   // Bit width
@@ -9,24 +9,24 @@ module register_tb;
     // Inputs for registers
     logic clk;                          // Clock
     logic chip_en;                      // Chip enable active high
-    logic write_en;                     // Write enable active low
-    logic reset;                        // Chip reset active low
+    logic write_en_n;                     // Write enable active low
+    logic rst_n;                        // Chip reset active low
     
     logic [BW-1:0] data_in;             // Input line into registers
-    logic [$clog2(DEPTH)] read_addr_1;  // Address for output line 1
-    logic [$clog2(DEPTH)] read_addr_2;  // Address for output line 2
-    logic [$clog2(DEPTH)] write_addr;   // Address to be written to
+    logic [$clog2(DEPTH)-1:0] read_addr_1;  // Address for output line 1
+    logic [$clog2(DEPTH)-1:0] read_addr_2;  // Address for output line 2
+    logic [$clog2(DEPTH)-1:0] write_addr;   // Address to be written to
 
-    // Outputs from register
+    // Outputs from register_file
     logic [BW-1:0] data_out_1;          // Data output line 1
     logic [BW-1:0] data_out_2;          // Data output line 2
 
 
-    // Delcaring the register
-    register #(.BW(BW), .DEPTH(DEPTH)) DUT (
+    // Declaring the register_file
+    register_file #(.BW(BW), .DEPTH(DEPTH)) DUT (
         .clk(clk),
-        .rst_n(reset),
-        .write_en_n(write_en),
+        .rst_n(rst_n),
+        .write_en_n(write_en_n),
         .chip_en(chip_en),
         .data_in(data_in),
         .read_addr_1(read_addr_1),
