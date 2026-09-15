@@ -17,3 +17,5 @@
 !project/Registers/register.sv
 !project/ALU/ALU_Exhaustive_TestBench.sv
 !project/ALU/ALU_TestBench_source.sv
+!project/Registers/register_file.sv
+!project/Registers/register_file_tb.sv
