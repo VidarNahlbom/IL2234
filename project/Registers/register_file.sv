@@ -1,4 +1,3 @@
-
 // Import the register block module
 
 // Module meant to simualte the registers of a RISC V processor. Course nomenclature said this is to be called register_file.
@@ -78,3 +77,4 @@ module register_file #(parameter BW, parameter DEPTH) (
         end
     end
 endmodule
+
