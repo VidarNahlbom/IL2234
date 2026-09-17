@@ -73,7 +73,8 @@ module register_file_tb;
             @(negedge clk);
             data_in    = $urandom;
             write_addr = $urandom_range(1, DEPTH-1);  // see bug below for why not $random
-            #1; // let the write settle combinationally/on the clock edge
+            @(posedge clk);
+            #1 // let the write settle combinationally/on the clock edge
             $display("t=%0t: wrote data_in=%0h to write_addr=%0d -> outputs[%0d]=%0h",
                     $time, data_in, write_addr, write_addr, DUT.outputs[write_addr]);
         end
@@ -88,8 +89,11 @@ module register_file_tb;
 
         read_addr_2 = 'd4;
 
+        @(negedge clk);
+        write_en_n = 1;
         @(posedge clk);
-        @(posedge clk);
+        data_in = 'd8;
+        write_addr = 'd7;
 
         @(posedge clk);
         #1 
