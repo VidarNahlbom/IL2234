@@ -2,7 +2,7 @@
 
 // Module meant to simualte the registers of a RISC V processor. Course nomenclature said this is to be called register_file.
 // Not to be confused with register_block witch is a singular register.
-module register_file #(parameter BW, parameter DEPTH) (
+module register_file #(parameter BW = 4, parameter DEPTH = 15) (
     //--------------------INPUTS--------------------
     input logic clk,                            // Clock input
     input logic rst_n,                          // Asynchronous active low reset signal
