@@ -1,13 +1,23 @@
-// Can be made into 3 states with no IDLE state, but then it will be continously cycling
-// between READ and DONE state, limiting availability if nothing else.
-// Read should take 1 cycle, read_en is read, addr is read, next state is READ
-// where data is routed internally to the primitive output register, so next state is DONE
-// and next rising edge that data is available on data_out, so state is DONE and mem_ready goes high
-// DONE will then have to be able to move into all 3 other states. 
+// Depending on how many cycles read and writes takes IDLE state might be useless. Also read state might be useless
+// If read takes just one cycle, so if read_en and addr are input at rising edge, and data can be read after rising edge then
+// read state is redundant, it will go from IDLE directly to DONE. 
+// We also need to figure out if the mem_ready should be tied to state?
+
+// IF read or writes take longer than 1 cycle, then inputs have to be latched so that they 
+// cannot be changed during the operations. this also includes read_en and such
+
+// currently i just have a read_en signal simply because the PDF for milestone 2 has one, but i think
+// it is up to us if we want to have it.
 
 // With both a write_en and a read_en, we have to decide which one takes priority incase both are high
 // We can also tie a chip_en to ena wire of sram_inst
-// because currently it will be reading every cycle no matter what i think
+// UPDATE: Made both read_en and write_en be required for writing
+// read_en is now same as chip enable
+// write_en has priority over read_en
+
+// Byte-wise writes still have to be implemented
+// Currently the last 2 bits of addr are just ignored.
+
 
 module memory_controller (
     input   logic       clk,
@@ -21,6 +31,7 @@ module memory_controller (
     input   logic       read_en,
     output  logic       mem_ready
 );
+    // declaration
     typedef enum logic[1:0] {
         IDLE,
         READ,
@@ -29,24 +40,25 @@ module memory_controller (
     } state_t;
     state_t currenct_state, next_state;
 
-    logic enable, load, co;
+    // Counter
+    logic enable, co;
     logic [1:0] count; // Counter for when read and write output is ready, so for mem_ready
     // Unsure how long each operation takes, will have to be figured out later
-
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n) count <= 2'b00;
         else if (enable) count <= count + 1;
-        else if (load) count <= 2'b00;
+        else count <= 2'b00;
     end
-    
     assign co = &count; // reduction and
     
+    // Address dividing
     logic [13:0] sram_addr; // clog2(65536) = 16 bits, remove 2 bits because SRAM is word-addressable
     assign sram_addr = addr[15:2];
 
+    // Init of SRAM
     SRAM_sv sram_inst (
         .clka(clk), // input wire clka
-        .ena(1'b1), // input wire ena
+        .ena(read_en), // input wire ena
         .wea(write_en), // input wire [3:0] wea
         .addra(sram_addr), // input wire [13:0] addra 
         .dina(data_in), // input wire [31:0] dina
@@ -55,23 +67,51 @@ module memory_controller (
 
     always_ff @(posedge clk or negedge rst_n) begin
         if(!rst_n) begin
-            currenct_state <= READ;
+            currenct_state <= IDLE;
         end else begin
             currenct_state <= next_state;
         end
     end
 
     always_comb begin
-        next_state = READ;
+        next_state = IDLE;
         mem_ready = 1'b0;
         enable = 1'b0;
-        load = 1'b0;
 
         case(currenct_state)
-            READ: begin
+            IDLE: begin
                 // If any write_en bit is high we go to write state, so reduction or operation is used
-                next_state = |write_en ? WRITE : READ;
-                // READ DONE mem_ready LOGIC
+                if (read_en) begin
+                    if(|write_en) begin
+                        next_state = WRITE;
+                    end else begin
+                        next_state = READ;
+                    end
+                end
+                // if read_en is low, then next state is IDLE, like default so doesnt have to be updated.
+            end
+            READ: begin
+                // Read should take one clock cycle because of primitive output register.
+                next_state = DONE; 
             end
             WRITE: begin
-                next_state = co ? DONE : WRITE; 
+                enable = 1'b1;
+                // I DONT KNOW HOW MANY CYCLES THE WRITE TAKES
+                // Counter needs to be adjusted
+                next_state = co ? DONE : WRITE;
+            end
+            DONE: 
+                mem_ready = 1'b1;
+
+                // and then same logic as IDLE:
+                if (read_en) begin
+                    if(|write_en) begin
+                        next_state = WRITE;
+                    end else begin
+                        next_state = READ;
+                    end
+                end
+            end
+        endcase
+    end
+endmodule
