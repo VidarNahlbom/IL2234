@@ -27,11 +27,11 @@ module memory_controller_tb;
     initial clk = 0;
     always #5 clk = ~clk;
     
-    always @(posedge clk) begin
+    /*  always @(posedge clk) begin
     $display("[cyc t=%0t] sram: ena=%b wea=%b addra=%0d dina=%h",
                $time, dut.sram_inst.ena, dut.sram_inst.wea,
                dut.sram_inst.addra, dut.sram_inst.dina);
-    end
+    end */
 
     initial begin
         // Init
@@ -47,24 +47,44 @@ module memory_controller_tb;
 
         $display("=== SRAM Testbench ===");
 
+
+        /* $display("--- Isolated read-latency test: write 0x0050, then read with 2-cycle check ---");
+        @(negedge clk);
+        write_en = 4'b1111; addr = 16'h0050; data_in = 32'h55667788;
+        @(posedge clk);
+        @(negedge clk); write_en = 4'b0000;
+
+        @(negedge clk); read_en = 1'b1; addr = 16'h0050;
+        @(posedge clk); #1;
+        $display("1 cycle after read request: data_out=%h", data_out);
+        @(posedge clk); #1;
+        $display("2 cycles after read request: data_out=%h", data_out);
+         */
+        
         $display("\n--- Test 1: Full word write to addr 0x0110 ---");
         @(negedge clk);
         write_en = 4'b1111;
         addr = 16'h0110;
         data_in = 32'haabbccdd;
 
-        @(posedge clk);
+        @(posedge clk); // Seems race conditions on these 3 are fine
         write_en = 4'b0000;
         addr = 16'h0011;
         data_in = 32'h000000aa;
 
-        repeat (2) @(posedge clk);
+        @(posedge clk); // ADDED FOR TEST
+        read_en = 1'b1;
+        // but race condition on read is not okay. 
+        @(posedge clk); // ADDED FOR TEST
+        @(negedge clk);
+        read_en = 1'b0;
+        @(posedge clk); // ADDED FOR TEST
 
         $display("--- Test 2: Read back addr 0x0110, expect aabbccdd ---");
-        @(negedge clk);
+        @(posedge clk);
         read_en = 1'b1;
         addr = 16'h0110;
-
+        @(posedge clk); // ADDED FOR TEST
         @(posedge clk);
         #1;
         if (data_out === 32'haabbccdd) begin
@@ -81,7 +101,7 @@ module memory_controller_tb;
         write_en = 4'b0010; 
         addr = 16'h0110;
         data_in = 32'h00ff0fff; // Should only care about stuff in parenthesis: 00ff(0f)ff
-
+        @(posedge clk); // ADDED FOR TEST
         @(posedge clk);
         write_en = 4'b0000; // With this, the enable signal to the chip goes low
         // so we also check if its still able to write.
@@ -89,7 +109,7 @@ module memory_controller_tb;
         $display("--- Test 4: Read back addr 0x0110, expect only byte 1 changed (aabb0fdd) ---");
         @(negedge clk);
         read_en = 1'b1;
-
+        @(posedge clk); // ADDED FOR TEST
         @(posedge clk);
         #1;
         if (data_out === 32'haabb0fdd) begin
@@ -106,7 +126,7 @@ module memory_controller_tb;
         write_en = 4'b1111;
         addr = 16'h0020;
         data_in = 32'h11223344;
-
+        @(posedge clk); // ADDED FOR TEST
         @(posedge clk);
         @(negedge clk);
         write_en = 4'b0000;
@@ -116,7 +136,7 @@ module memory_controller_tb;
         @(negedge clk);
         read_en = 1'b1;
         addr = 16'h0110;
-
+        @(posedge clk); // ADDED FOR TEST
         @(posedge clk);
         #1;
         if (data_out === 32'haabb0fdd) begin
@@ -132,7 +152,7 @@ module memory_controller_tb;
         @(negedge clk);
         read_en = 1'b1;
         addr = 16'h0020;
-
+        @(posedge clk); // ADDED FOR TEST
         @(posedge clk);
         #1;
         if (data_out === 32'h11223344) begin
@@ -144,14 +164,14 @@ module memory_controller_tb;
         @(negedge clk);
         read_en = 1'b0;
 
-        $display("\n--- Test 8: mem_ready timing check - should be high exactly one cycle after request ---");
+        $display("\n--- Test 8: mem_ready timing check - should be high exactly 2 cycle after request ---");
         @(negedge clk);
         read_en = 1'b1;
         addr = 16'h0020;
         if (mem_ready !== 1'b0) begin
             $display("FAIL: mem_ready asserted too early (before request even sampled)");
         end
-
+        @(posedge clk); // ADDED FOR TEST
         @(posedge clk);
         #1;
         if (mem_ready === 1'b1) begin
@@ -168,13 +188,14 @@ module memory_controller_tb;
         write_en = 4'b1111;
         addr = 16'h0030;
         data_in = 32'hcdcdcdcd;
+        @(posedge clk); // ADDED FOR TEST
         @(posedge clk);
- 
+
         @(negedge clk);
-        addr = 16'h0031;
+        addr = 16'h0034;
         data_in = 32'habababab;
         @(posedge clk);
- 
+        @(posedge clk); // ADDED FOR TEST
         @(negedge clk);
         write_en = 4'b0000;
  
@@ -182,7 +203,7 @@ module memory_controller_tb;
         @(negedge clk);
         read_en = 1'b1;
         addr = 16'h0030;
-
+        @(posedge clk); // ADDED FOR TEST
         @(posedge clk);
         #1;
         if (data_out === 32'hcdcdcdcd) begin
@@ -192,13 +213,14 @@ module memory_controller_tb;
         end
 
         @(negedge clk);
-        addr = 16'h0031;
+        addr = 16'h0034;
+        @(posedge clk); // ADDED FOR TEST
         @(posedge clk);
         #1;
         if (data_out === 32'habababab) begin
-            $display("PASS: addr 0x0031 = %h", data_out);
+            $display("PASS: addr 0x0034 = %h", data_out);
         end else begin
-            $display("FAIL: addr 0x0031 expected abababab, got %h", data_out);
+            $display("FAIL: addr 0x0034 expected abababab, got %h", data_out);
         end
 
         @(negedge clk);

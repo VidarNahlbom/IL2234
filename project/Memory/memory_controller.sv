@@ -24,8 +24,9 @@ module memory_controller (
     output  logic       mem_ready
 );
     // declaration
-    typedef enum logic {
+    typedef enum logic[1:0] {
         IDLE,
+        WAIT,
         DONE
     } state_t;
     state_t currenct_state, next_state;
@@ -63,13 +64,16 @@ module memory_controller (
                 // if any en signal is high we change state
                 // so make the multi-bit write_en one bit logic 
                 // using reductive or, then logical or between both
-                if (read_en || |write_en) next_state = DONE;
+                if (read_en || |write_en) next_state = WAIT;
                 // if all is low, then next state is IDLE, like default so doesnt have to be updated.
+            end
+            WAIT: begin
+                next_state = DONE;
             end
             DONE: begin
                 mem_ready = 1'b1;
                 // and then same logic as IDLE:
-                if (read_en || |write_en) next_state = DONE;
+                if (read_en || |write_en) next_state = WAIT;
             end
         endcase
     end
