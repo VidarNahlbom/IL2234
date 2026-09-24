@@ -1,5 +1,6 @@
 // currently i just have a read_en signal simply because the PDF for milestone 2 has one, but i think
 // it is up to us if we want to have it.
+// now it just signals state changes and mem_ready
 
 // With both a write_en and a read_en, we have to decide which one takes priority incase both are high
 // We can also tie a chip_en to ena wire of sram_inst
@@ -7,9 +8,9 @@
 // and will either read or write.
 // So data out will change when read_en is low but we wrote to somewhere, which is bad
 
-// Read take just 1 rising edge, so if addr and read_en are high on falling edge
-// data is available after rising edge
-// as far as i can tell writes also take only 1 clock cycle. 
+// ive now hardwired chip to be enabled, so data_out updated continiously
+
+// Read has latency 1, write has latency 0. 
 
 module memory_controller (
     input   logic       clk,
@@ -39,7 +40,7 @@ module memory_controller (
     SRAM sram_inst (
         .clka(clk), // input wire clka
         // made chip enable at any enable input
-        .ena(read_en), // input wire ena
+        .ena(1'b1), // input wire ena
         .wea(write_en), // input wire [3:0] wea
         .addra(sram_addr), // input wire [13:0] addra 
         .dina(data_in), // input wire [31:0] dina
@@ -61,10 +62,10 @@ module memory_controller (
 
         case(currenct_state)
             IDLE: begin
-                // if any en signal is high we change state
-                // so make the multi-bit write_en one bit logic 
-                // using reductive or, then logical or between both
-                if (read_en || |write_en) next_state = WAIT;
+                // reductive or used on write
+                if (|write_en) next_state = DONE;
+                else if (read_en) next_state = WAIT;
+
                 // if all is low, then next state is IDLE, like default so doesnt have to be updated.
             end
             WAIT: begin
@@ -73,7 +74,8 @@ module memory_controller (
             DONE: begin
                 mem_ready = 1'b1;
                 // and then same logic as IDLE:
-                if (read_en || |write_en) next_state = WAIT;
+                if (|write_en) next_state = DONE;
+                else if (read_en) next_state = WAIT;
             end
         endcase
     end

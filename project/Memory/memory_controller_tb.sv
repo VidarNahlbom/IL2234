@@ -19,7 +19,7 @@ module memory_controller_tb;
         .data_in   (data_in),
         .data_out  (data_out),
         .write_en  (write_en),
-        .read_en   (read_en || |write_en),
+        .read_en   (read_en),
         .mem_ready (mem_ready)
     );
 
@@ -72,7 +72,7 @@ module memory_controller_tb;
         addr = 16'h0011;
         data_in = 32'h000000aa;
 
-        @(posedge clk); // ADDED FOR TEST
+        //@(posedge clk); // WRITE DELAY ADDED FOR TEST
         read_en = 1'b1;
         // but race condition on read is not okay. 
         @(posedge clk); // ADDED FOR TEST
@@ -101,7 +101,7 @@ module memory_controller_tb;
         write_en = 4'b0010; 
         addr = 16'h0110;
         data_in = 32'h00ff0fff; // Should only care about stuff in parenthesis: 00ff(0f)ff
-        @(posedge clk); // ADDED FOR TEST
+        //@(posedge clk); // WRITE DELAY ADDED FOR TEST
         @(posedge clk);
         write_en = 4'b0000; // With this, the enable signal to the chip goes low
         // so we also check if its still able to write.
@@ -126,7 +126,7 @@ module memory_controller_tb;
         write_en = 4'b1111;
         addr = 16'h0020;
         data_in = 32'h11223344;
-        @(posedge clk); // ADDED FOR TEST
+        //@(posedge clk); // WRITE DELAY ADDED FOR TEST
         @(posedge clk);
         @(negedge clk);
         write_en = 4'b0000;
@@ -188,14 +188,14 @@ module memory_controller_tb;
         write_en = 4'b1111;
         addr = 16'h0030;
         data_in = 32'hcdcdcdcd;
-        @(posedge clk); // ADDED FOR TEST
+        //@(posedge clk); // WRITE DELAY ADDED FOR TEST
         @(posedge clk);
 
         @(negedge clk);
         addr = 16'h0034;
         data_in = 32'habababab;
         @(posedge clk);
-        @(posedge clk); // ADDED FOR TEST
+        //@(posedge clk); // WRITE DELAY ADDED FOR TEST
         @(negedge clk);
         write_en = 4'b0000;
  
@@ -225,7 +225,98 @@ module memory_controller_tb;
 
         @(negedge clk);
         read_en = 1'b0;
+
+        $display("\n--- Test 11: Asynchronous reset mid-operation ---");
+        // Start a read so the FSM is in its wait state, then
+        // assert rst_n low without waiting for a clock edge
+        @(negedge clk);
+        read_en = 1'b1;
+        addr    = 16'h0050;
  
+        @(posedge clk);
+ 
+        #2;             // partway through the cycle
+        rst_n = 1'b0;   // assert reset asynchronously
+ 
+        #1;
+        if (mem_ready === 1'b0) begin
+            $display("PASS: mem_ready deasserted immediately on async reset");
+        end else begin
+            $display("FAIL: mem_ready still high after async reset, mem_ready=%b", mem_ready);
+        end 
+
+        // Hold reset for a couple of cycles, then release
+        repeat (2) @(posedge clk);
+        @(negedge clk);
+        rst_n   = 1'b1;
+        read_en = 1'b0;
+        write_en = 4'b0000;
+ 
+        $display("--- Test 12: Confirm normal operation resumes correctly after reset ---");
+        @(negedge clk);
+        write_en = 4'b1111;
+        addr     = 16'h0060;
+        data_in  = 32'h88888888;
+        @(posedge clk);
+        @(negedge clk);
+        write_en = 4'b0000;
+ 
+        @(negedge clk);
+        read_en = 1'b1;
+        addr    = 16'h0060;
+        @(posedge clk);
+        @(posedge clk); // one wait cycle for read latency
+        #1;
+        if (data_out === 32'h88888888)
+            $display("PASS: post-reset write/read works, data_out=%h", data_out);
+        else
+            $display("FAIL: post-reset write/read broken, got %h", data_out);
+ 
+        @(negedge clk);
+        read_en = 1'b0;
+ 
+        $display("\n--- Test 13: read_en and write_en both asserted simultaneously ---");
+        // Per design notes: write_en should take priority over read_en
+        // when both are high at once. Write NEW data to an address that
+        // already holds a DIFFERENT known value, so we can distinguish
+        // "write happened" from "stale read happened" in the result.
+        @(negedge clk);
+        write_en = 4'b1111;
+        addr     = 16'h0070;
+        data_in  = 32'h00000001;
+        @(posedge clk);
+        @(negedge clk);
+        write_en = 4'b0000;
+ 
+        // Now assert BOTH read_en and write_en at once, writing a NEW value
+        @(negedge clk);
+        read_en  = 1'b1;
+        write_en = 4'b1111;
+        addr     = 16'h0070;
+        data_in  = 32'h66666666;
+ 
+        @(posedge clk); // per priority rule, this should be treated as WRITE
+        @(negedge clk);
+        read_en  = 1'b0;
+        write_en = 4'b0000;
+        // We should therefore not see it enter WAIT state
+ 
+        $display("--- Test 14: Read back addr 0x0070, expect 66666666 if write_en had priority ---");
+        @(negedge clk);
+        read_en = 1'b1;
+        addr    = 16'h0070;
+        @(posedge clk);
+        @(posedge clk); // wait cycle for read latency
+        #1;
+        if (data_out === 32'h66666666)
+            $display("PASS: write_en took priority as intended, data_out=%h", data_out);
+        else
+            $display("FAIL/NOTE: got %h - if this is 00000001, write_en was NOT prioritized (or was ignored while read_en also high)", data_out);
+ 
+        @(negedge clk);
+        read_en = 1'b0;
+
+
         repeat (3) @(posedge clk);
         $display("\n=== Testbench finished ===");
 
