@@ -18,6 +18,14 @@
 // Byte-wise writes still have to be implemented
 // Currently the last 2 bits of addr are just ignored.
 
+// Read take just 1 rising edge, so if addr and read_en are high on falling edge
+// data is available after rising edge
+// as far as i can tell writes also take only 1 clock cycle. 
+
+// seems then that basically all states are redudant, and we simply need 
+// 2, maybe 3 states.
+// one to start in, with mem_ready low
+// one to say mem_ready and then possibly one more incase we find an operation that has latency.
 
 module memory_controller (
     input   logic       clk,
@@ -40,7 +48,7 @@ module memory_controller (
     } state_t;
     state_t currenct_state, next_state;
 
-    // Counter
+    /* // Counter
     logic enable, co;
     logic [1:0] count; // Counter for when read and write output is ready, so for mem_ready
     // Unsure how long each operation takes, will have to be figured out later
@@ -49,14 +57,14 @@ module memory_controller (
         else if (enable) count <= count + 1;
         else count <= 2'b00;
     end
-    assign co = &count; // reduction and
+    assign co = &count; // reduction and */
     
     // Address dividing
     logic [13:0] sram_addr; // clog2(65536) = 16 bits, remove 2 bits because SRAM is word-addressable
     assign sram_addr = addr[15:2];
 
     // Init of SRAM
-    SRAM_sv sram_inst (
+    SRAM sram_inst (
         .clka(clk), // input wire clka
         .ena(read_en), // input wire ena
         .wea(write_en), // input wire [3:0] wea
@@ -76,7 +84,7 @@ module memory_controller (
     always_comb begin
         next_state = IDLE;
         mem_ready = 1'b0;
-        enable = 1'b0;
+        //enable = 1'b0;
 
         case(currenct_state)
             IDLE: begin
@@ -91,21 +99,24 @@ module memory_controller (
                 // if read_en is low, then next state is IDLE, like default so doesnt have to be updated.
             end
             READ: begin
-                // Read should take one clock cycle because of primitive output register.
+                // Read takes one cycle, so addr and read_en input on rising edge
+                // and next rising edge data is available on data_out.
                 next_state = DONE; 
             end
             WRITE: begin
-                enable = 1'b1;
+                // enable = 1'b1;
                 // I DONT KNOW HOW MANY CYCLES THE WRITE TAKES
                 // Counter needs to be adjusted
-                next_state = co ? DONE : WRITE;
+                // next_state = co ? DONE : WRITE;
+                next_state = DONE; 
+
             end
-            DONE: 
+            DONE: begin
                 mem_ready = 1'b1;
 
                 // and then same logic as IDLE:
                 if (read_en) begin
-                    if(|write_en) begin
+                    if (|write_en) begin
                         next_state = WRITE;
                     end else begin
                         next_state = READ;
