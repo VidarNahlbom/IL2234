@@ -20,3 +20,4 @@
 !project/Registers/register_file.sv
 !project/Registers/register_file_tb.sv
 !project/Memory/memory_controller.sv
+!project/Memory/memory_controller_tb.sv
