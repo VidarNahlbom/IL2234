@@ -27,98 +27,179 @@ module memory_controller_tb;
     initial clk = 0;
     always #5 clk = ~clk;
 
-    // Cycle counter, just for readable log timestamps
-    int cycle_count;
-    always @(posedge clk) cycle_count <= cycle_count + 1;
-
-    // ---------------------------------------------------------------
-    // Helper task: pulse a request for one cycle, then wait and count
-    // how many clock edges pass until mem_ready goes high.
-    // ---------------------------------------------------------------
-    task automatic measure_latency(
-        input string      op_name,
-        input logic [15:0] t_addr,
-        input logic [31:0] t_data,
-        input logic [3:0]  t_write_en,
-        input logic        t_read_en
-    );
-        int latency;
-        begin
-            // Drive the request on this rising edge
-            @(negedge clk); // change inputs away from the clock edge
-            addr      = t_addr;
-            data_in   = t_data;
-            write_en  = t_write_en;
-            read_en   = t_read_en;
-
-            @(posedge clk); // request is now sampled by the FSM
-            $display("[%0t] %s request issued: addr=%0d write_en=%b read_en=%b",
-                       $time, op_name, t_addr, t_write_en, t_read_en);
-
-            // Deassert request lines after one cycle, so we only measure
-            // the latency of this single request, not a held/continuous one
-            @(negedge clk);
-            read_en  = 1'b0;
-            write_en = 4'b0000;
-
-            latency = 0;
-            while (mem_ready !== 1'b1) begin
-                @(posedge clk);
-                latency++;
-                if (latency > 20) begin
-                    $display("[%0t] %s: mem_ready never asserted after 20 cycles - aborting", $time, op_name);
-                    disable measure_latency;
-                end
-            end
-
-            $display("[%0t] %s: mem_ready asserted after %0d cycle(s). data_out=%0d",
-                       $time, op_name, latency, data_out);
-        end
-    endtask
-
     initial begin
         // Init
-        rst_n     = 0;
-        addr      = '0;
-        data_in   = '0;
-        write_en  = '0;
-        read_en   = 1'b0;
-        cycle_count = 0;
+        rst_n = 0;
+        addr = '0;
+        data_in = '0;
+        write_en = '0;
+        read_en = 1'b0;
 
-        // Hold reset for a few cycles
-        repeat (3) @(posedge clk);
+        @(posedge clk);
         rst_n = 1;
         @(negedge clk);
 
-        $display("\n=== Measuring WRITE latency ===");
-        measure_latency("WRITE", 16'h0010, 32'hAABBCCDD, 4'b1111, 1'b1);
+        $display("=== SRAM Testbench ===");
 
-        // Give a gap cycle before next op so waveforms are easy to read
+        $display("\n--- Test 1: Full word write to addr 0x0110 ---");
+        @(negedge clk);
+        write_en = 4'b0110;
+        addr = 16'h0110;
+        data_in = 32'hAABBCCDD;
+
+        @(posedge clk);
+        write_en = 4'b0000;
+        addr = 16'h0011;
+        data_in = 32'h000000aa;
+
         repeat (2) @(posedge clk);
 
-        $display("\n=== Measuring READ latency ===");
-        measure_latency("READ", 16'h0010, 32'h0, 4'b0000, 1'b1);
+        $display("--- Test 2: Read back addr 0x0110, expect AABBCCDD ---");
+        @(negedge clk);
+        read_en = 1'b1;
+        addr = 16'h0110;
 
-        repeat (2) @(posedge clk);
+        @(posedge clk);
+        #1;
+        if (data_out === 32'hAABBCCDD) begin
+            $display("PASS: data_out = %h", data_out);
+        end else begin
+            $display("FAIL: expected AABBCCDD, got %h", data_out);
+        end
 
-        $display("\n=== Measuring BYTE WRITE latency (single byte) ===");
-        measure_latency("BYTE_WRITE", 16'h0020, 32'h000000FF, 4'b0001, 1'b1);
+        @(negedge clk);
+        read_en = 1'b0;
+        
+        $display("\n--- Test 3: Byte-wise write - only byte 1 (bits 15:8) of addr 0x0110 ---");
+        @(negedge clk);
+        write_en = 4'b0010; 
+        addr = 16'h0110;
+        data_in = 32'h00FF0FFF; // SHOULD ONLY CARE ABOUT LAST TWO FF
 
-        repeat (2) @(posedge clk);
+        @(posedge clk);
+        write_en = 4'b0000; // With this, the enable signal to the chip goes low
+        // so we also check if its still able to write.
 
-        $display("\n=== Measuring READ-after-BYTE-WRITE (check byte lanes) ===");
-        measure_latency("READ_CHECK", 16'h0020, 32'h0, 4'b0000, 1'b1);
+        $display("--- Test 4: Read back addr 0x0110, expect only byte 1 changed (AABB0FDD) ---");
+        @(negedge clk);
+        read_en = 1'b1;
 
-        repeat (5) @(posedge clk);
+        @(posedge clk);
+        #1;
+        if (data_out === 32'hAABB0FDD) begin
+            $display("PASS: data_out = %h", data_out);
+        end else begin
+            $display("FAIL: expected AABB0FDD, got %h", data_out);
+        end
+        
+        @(negedge clk);
+        read_en = 1'b0;
 
+        $display("\n--- Test 5: Write to a different address ---");
+        @(negedge clk);
+        write_en = 4'b1111;
+        addr = 16'h0020;
+        data_in = 32'h11223344;
+
+        @(posedge clk);
+        @(negedge clk);
+        write_en = 4'b0000;
+
+        $display("--- Test 6: Read addr 0x0110 again ---");
+        @(negedge clk);
+        read_en = 1'b1;
+        addr = 16'b0110;
+
+        @(posedge clk);
+        #1;
+        if (data_out === 32'hAABB0FDD) begin
+            $display("PASS: addr 0x0110 unaffected, data_out = %h", data_out);
+        end else begin
+            $display("FAIL: addr 0x0110 was corrupted, got %h", data_out);
+        end
+
+        @(negedge clk);
+        read_en = 1'b0;
+
+        $display("--- Test 7: Read addr 0x0020, expect 11223344 ---");
+        @(negedge clk);
+        read_en = 1'b1;
+        addr = 16'h0020;
+
+        @(posedge clk);
+        #1;
+        if (data_out === 32'h11223344) begin
+            $display("PASS: data_out = %h", data_out);
+        end else begin
+            $display("FAIL: expected 11223344, got %h", data_out);
+        end
+
+        @(negedge clk);
+        read_en = 1'b0;
+
+        $display("\n--- Test 8: mem_ready timing check - should be high exactly one cycle after request ---");
+        @(negedge clk);
+        read_en = 1'b1;
+        addr = 16'h0020;
+        if (mem_ready !== 1'b0) begin
+            $display("FAIL: mem_ready asserted too early (before request even sampled)");
+        end
+
+        @(posedge clk);
+        #1;
+        if (mem_ready === 1'b1) begin
+            $display("PASS: mem_ready high on expected cycle");
+        end else begin
+            $display("FAIL: mem_ready not high when expected, mem_ready=%b", mem_ready);
+        end
+
+        @(negedge clk);
+        read_en = 1'b0;
+
+        $display("\n--- Test 9: Back-to-back writes without a gap cycle ---");
+        @(negedge clk);
+        write_en = 4'b1111;
+        addr = 16'h0030;
+        data_in = 32'hCDCDCDCD;
+        @(posedge clk);
+ 
+        @(negedge clk);
+        addr = 16'h0031;
+        data_in = 32'hABABABAB;
+        @(posedge clk);
+ 
+        @(negedge clk);
+        write_en = 4'b0000;
+ 
+        $display("--- Test 10: Verify both back-to-back writes ---");
+        @(negedge clk);
+        read_en = 1'b1;
+        addr    = 16'h0030;
+
+        @(posedge clk);
+        #1;
+        if (data_out === 32'hCDCDCDCD)
+            $display("PASS: addr 0x0030 = %h", data_out);
+        else
+            $display("FAIL: addr 0x0030 expected CDCDCDCD, got %h", data_out);
+ 
+        @(negedge clk);
+        addr = 16'h0031;
+        @(posedge clk);
+        #1;
+        if (data_out === 32'hABABABAB)
+            $display("PASS: addr 0x0031 = %h", data_out);
+        else
+            $display("FAIL: addr 0x0031 expected ABABABAB, got %h", data_out);
+ 
+        @(negedge clk);
+        read_en = 1'b0;
+ 
+        repeat (3) @(posedge clk);
         $display("\n=== Testbench finished ===");
-        $finish;
-    end
 
-    // Optional: dump waves for visual inspection in Vivado simulator
-    initial begin
-        $dumpfile("memory_controller_tb.vcd");
-        $dumpvars(0, memory_controller_tb);
+
+        $finish;
     end
 
 endmodule
