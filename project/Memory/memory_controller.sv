@@ -5,6 +5,7 @@
 // We can also tie a chip_en to ena wire of sram_inst
 // currently if any enable signal (even single bit) is high, chip is enabled
 // and will either read or write.
+// So data out will change when read_en is low but we wrote to somewhere, which is bad
 
 // Read take just 1 rising edge, so if addr and read_en are high on falling edge
 // data is available after rising edge
@@ -37,7 +38,7 @@ module memory_controller (
     SRAM sram_inst (
         .clka(clk), // input wire clka
         // made chip enable at any enable input
-        .ena(read_en || |write_en), // input wire ena
+        .ena(read_en), // input wire ena
         .wea(write_en), // input wire [3:0] wea
         .addra(sram_addr), // input wire [13:0] addra 
         .dina(data_in), // input wire [31:0] dina

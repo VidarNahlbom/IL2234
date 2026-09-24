@@ -19,13 +19,19 @@ module memory_controller_tb;
         .data_in   (data_in),
         .data_out  (data_out),
         .write_en  (write_en),
-        .read_en   (read_en),
+        .read_en   (read_en || |write_en),
         .mem_ready (mem_ready)
     );
 
     // Clock generation: 10ns period
     initial clk = 0;
     always #5 clk = ~clk;
+    
+    always @(posedge clk) begin
+    $display("[cyc t=%0t] sram: ena=%b wea=%b addra=%0d dina=%h",
+               $time, dut.sram_inst.ena, dut.sram_inst.wea,
+               dut.sram_inst.addra, dut.sram_inst.dina);
+    end
 
     initial begin
         // Init
@@ -43,9 +49,9 @@ module memory_controller_tb;
 
         $display("\n--- Test 1: Full word write to addr 0x0110 ---");
         @(negedge clk);
-        write_en = 4'b0110;
+        write_en = 4'b1111;
         addr = 16'h0110;
-        data_in = 32'hAABBCCDD;
+        data_in = 32'haabbccdd;
 
         @(posedge clk);
         write_en = 4'b0000;
@@ -54,17 +60,17 @@ module memory_controller_tb;
 
         repeat (2) @(posedge clk);
 
-        $display("--- Test 2: Read back addr 0x0110, expect AABBCCDD ---");
+        $display("--- Test 2: Read back addr 0x0110, expect aabbccdd ---");
         @(negedge clk);
         read_en = 1'b1;
         addr = 16'h0110;
 
         @(posedge clk);
         #1;
-        if (data_out === 32'hAABBCCDD) begin
+        if (data_out === 32'haabbccdd) begin
             $display("PASS: data_out = %h", data_out);
         end else begin
-            $display("FAIL: expected AABBCCDD, got %h", data_out);
+            $display("FAIL: expected aabbccdd, got %h", data_out);
         end
 
         @(negedge clk);
@@ -74,22 +80,22 @@ module memory_controller_tb;
         @(negedge clk);
         write_en = 4'b0010; 
         addr = 16'h0110;
-        data_in = 32'h00FF0FFF; // SHOULD ONLY CARE ABOUT LAST TWO FF
+        data_in = 32'h00ff0fff; // Should only care about stuff in parenthesis: 00ff(0f)ff
 
         @(posedge clk);
         write_en = 4'b0000; // With this, the enable signal to the chip goes low
         // so we also check if its still able to write.
 
-        $display("--- Test 4: Read back addr 0x0110, expect only byte 1 changed (AABB0FDD) ---");
+        $display("--- Test 4: Read back addr 0x0110, expect only byte 1 changed (aabb0fdd) ---");
         @(negedge clk);
         read_en = 1'b1;
 
         @(posedge clk);
         #1;
-        if (data_out === 32'hAABB0FDD) begin
+        if (data_out === 32'haabb0fdd) begin
             $display("PASS: data_out = %h", data_out);
         end else begin
-            $display("FAIL: expected AABB0FDD, got %h", data_out);
+            $display("FAIL: expected aabb0fdd, got %h", data_out);
         end
         
         @(negedge clk);
@@ -104,15 +110,16 @@ module memory_controller_tb;
         @(posedge clk);
         @(negedge clk);
         write_en = 4'b0000;
+        data_in = '0;
 
         $display("--- Test 6: Read addr 0x0110 again ---");
         @(negedge clk);
         read_en = 1'b1;
-        addr = 16'b0110;
+        addr = 16'h0110;
 
         @(posedge clk);
         #1;
-        if (data_out === 32'hAABB0FDD) begin
+        if (data_out === 32'haabb0fdd) begin
             $display("PASS: addr 0x0110 unaffected, data_out = %h", data_out);
         end else begin
             $display("FAIL: addr 0x0110 was corrupted, got %h", data_out);
@@ -160,12 +167,12 @@ module memory_controller_tb;
         @(negedge clk);
         write_en = 4'b1111;
         addr = 16'h0030;
-        data_in = 32'hCDCDCDCD;
+        data_in = 32'hcdcdcdcd;
         @(posedge clk);
  
         @(negedge clk);
         addr = 16'h0031;
-        data_in = 32'hABABABAB;
+        data_in = 32'habababab;
         @(posedge clk);
  
         @(negedge clk);
@@ -174,24 +181,26 @@ module memory_controller_tb;
         $display("--- Test 10: Verify both back-to-back writes ---");
         @(negedge clk);
         read_en = 1'b1;
-        addr    = 16'h0030;
+        addr = 16'h0030;
 
         @(posedge clk);
         #1;
-        if (data_out === 32'hCDCDCDCD)
+        if (data_out === 32'hcdcdcdcd) begin
             $display("PASS: addr 0x0030 = %h", data_out);
-        else
-            $display("FAIL: addr 0x0030 expected CDCDCDCD, got %h", data_out);
- 
+        end else begin
+            $display("FAIL: addr 0x0030 expected cdcdcdcd, got %h", data_out);
+        end
+
         @(negedge clk);
         addr = 16'h0031;
         @(posedge clk);
         #1;
-        if (data_out === 32'hABABABAB)
+        if (data_out === 32'habababab) begin
             $display("PASS: addr 0x0031 = %h", data_out);
-        else
-            $display("FAIL: addr 0x0031 expected ABABABAB, got %h", data_out);
- 
+        end else begin
+            $display("FAIL: addr 0x0031 expected abababab, got %h", data_out);
+        end
+
         @(negedge clk);
         read_en = 1'b0;
  
