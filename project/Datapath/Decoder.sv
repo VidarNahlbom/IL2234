@@ -104,6 +104,9 @@ module Decoder (
                 ALU_opcode = ALU_ADD;
             end
             
+
+            // ALL WRONG, SHOULD USE THE ZERO FLAG FROM THE ALU I GUESS, NEEDS INTEGRATION WITH CONTROLLER
+            // REDO
             // Branches: ALU compares x[rs1] & x[rs2], taken decided in datapath
             OP_BRANCH: begin
                 imm = {{19{data_in[31]}}, data_in[31], data_in[7], data_in[30:25], data_in[11:8], 1'b0};
