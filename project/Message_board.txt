@@ -1,0 +1,7 @@
+Message board for info related to the project, should be kept updated making it easier than using the whatsapp group
+1. Half word writing was not tested in milestone 2, has to be tested so that the memory can handle it because its part of the RISC-V ISA
+2. We have to decide if decoder should take zero flag as input to generate the branching logic, or if that should be handled by separate module in the datapath
+3. JALR has to be double checked how lowest bits are set to 0 via wires
+4. Must decide how chip_en works in the RF, currently it only sets data_out_1 and data_out_2 to 0 when its low. Can probably be removed.
+5. Decide how rst works for the RF, should all registers be emptied?
+6. Decide how the enable wire for SRAM_inst should be used, currently hard wired to 1, see comments in the memory_controller.sv file

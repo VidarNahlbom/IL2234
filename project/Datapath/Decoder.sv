@@ -126,7 +126,8 @@ module Decoder (
             // and also splices to correct bit length.
             OP_LOAD: begin
                 imm = {{20{data_in[31]}}, data_in[31:20]};
-                is_load = 1'b1; // is_load = 1 causes controller to swap mem_addr_src to 1.
+                is_load = 1'b1;
+                writes_rf = 1'b1;
                 ALU_b_src = 1'b1;
                 ALU_opcode = ALU_ADD; 
                 rf_write_src = 2'b01; // data_out from memory

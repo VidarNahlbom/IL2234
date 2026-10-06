@@ -22,3 +22,6 @@
 !project/Memory/memory_controller.sv
 !project/Memory/memory_controller_tb.sv
 !project/Datapath/Decoder.sv
+!project/Message_board.txt
+!project/Datapath/memory_write_unit.sv
+!project/Datapath/memory_load_unit.sv
