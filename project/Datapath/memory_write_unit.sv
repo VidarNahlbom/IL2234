@@ -5,6 +5,7 @@ module memory_write_unit (
     output logic [3:0] write_en 
 );
     always_comb begin
+        write_en = 4'b0000;
         if (mem_write) begin
             case (func3)
                 3'b000: case (addr_lo) 
@@ -14,16 +15,9 @@ module memory_write_unit (
                             2'd3: write_en = 4'b1000;
                         endcase
                 3'b001: write_en = addr_lo[1] ? 4'b1100 : 4'b0011; // Untested in milestone 2 
-            half_sel = addr_lo[1] ? mem_data[31:16] : mem_data[15:0];
-
-
-            case (func3)
-                3'b000: load_data = {{24{byte_sel[7]}},  byte_sel}; // LB
-                3'b001: load_data = {{16{half_sel[15]}}, half_sel}; // LH
-                3'b010: load_data = mem_data;                       // LW
-                3'b100: load_data = {24'b0, byte_sel};              // LBU
-                3'b101: load_data = {16'b0, half_sel};              // LHU
-                default: load_data = mem_data;
+                3'b010: write_en = 4'b1111;
+                default: write_en = 4'b0000; // if func3 is not correct, something has gone wrong, dont want to corrupt memory because of that
             endcase
+        end
     end
 endmodule
