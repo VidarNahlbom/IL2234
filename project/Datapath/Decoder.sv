@@ -1,5 +1,3 @@
-// Currently not working: Loads
-
 module Decoder (
     input logic [31:0] data_in, // Instruction from IR
     input logic zero, // zero flag from ALU
@@ -117,13 +115,7 @@ module Decoder (
             end
 
             // Loads: address = rs1 + imm, data goes to rd in execute-2
-            // The sign extension is handled by NOTHING, and the bit amount is handled by NOTHING
-            // Currently not working then, as the previously made memory is incorrect, as it now reads only full words
-            // this is not compliant with what these instructions need. 
-            // MIght need a multi signal read too then, as currently it has just a single bit input
-            // this would however be weird, as the previous milestone it was made in needed nothing of the sort. 
-            // Most likely a new module should be used for loads, one that does both sign extenstion and zero extension
-            // and also splices to correct bit length.
+            // The sign extension and bit amount is handled by memory_load_unit
             OP_LOAD: begin
                 imm = {{20{data_in[31]}}, data_in[31:20]};
                 is_load = 1'b1;
