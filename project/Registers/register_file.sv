@@ -1,3 +1,5 @@
+// 7. RF address 0 has to be coded to always have value 0 stored in it, and writes to it ignored.
+
 // Import the register block module
 
 // Module meant to simualte the registers of a RISC V processor. Course nomenclature said this is to be called register_file.
