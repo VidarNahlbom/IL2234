@@ -1,7 +1,6 @@
 Message board for info related to the project, should be kept updated making it easier than using the whatsapp group
-1. Half word writing was not tested in milestone 2, has to be tested so that the memory can handle it because its part of the RISC-V ISA
+1. Half word writing was not tested in milestone 2, has to be tested so that the memory can handle it because its part of the RISC-V ISA. the test should also include SH at the upper half of the word, and the lane replication in memory_write_unit has to go with it
 2. We have to decide if decoder should take zero flag as input to generate the branching logic, or if that should be handled by separate module in the datapath
 3. JALR has to be double checked how lowest bits are set to 0 via wires
-4. Correctly implement Chip_en and rst_n in RF
-6. Decide how the enable wire for SRAM_inst should be used, currently hard wired to 1, see comments in the memory_controller.sv file
-7. RF address 0 has to be coded to always have value 0 stored in it, and writes to it ignored. 
+5. Decide how the enable wire for SRAM_inst should be used, currently hard wired to 1, see comments in the memory_controller.sv file
+6. understand what they mean by "Note that the program counter is stored with the increment already applied." for JAL instruction.

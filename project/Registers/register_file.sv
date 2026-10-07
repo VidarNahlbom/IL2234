@@ -1,5 +1,3 @@
-// 7. RF address 0 has to be coded to always have value 0 stored in it, and writes to it ignored.
-
 // Import the register block module
 
 // Module meant to simualte the registers of a RISC V processor. Course nomenclature said this is to be called register_file.
@@ -60,7 +58,7 @@ module register_file #(parameter BW = 4, parameter DEPTH = 15) (
         // but we still need to reset the data_out
         // this is done combinationally and therefore async here
         // in the reg blocks, its activated by rst_n having negedge
-        if (!rst_n | !chip_en) begin
+        if (!rst_n || !chip_en) begin
             data_out_1 = 'b0;
             data_out_2 = 'b0;
         end

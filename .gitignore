@@ -21,7 +21,8 @@
 !project/Registers/register_file_tb.sv
 !project/Memory/memory_controller.sv
 !project/Memory/memory_controller_tb.sv
-!project/Datapath/Decoder.sv
+!project/Datapath/decoder.sv
 !project/Message_board.txt
 !project/Datapath/memory_write_unit.sv
 !project/Datapath/memory_load_unit.sv
+!project/Datapath/program_counter.sv
