@@ -1,13 +1,13 @@
 module program_counter (
     input logic clk,
     input logic rst_n,
-    input logic pc_en,
-    input logic [1:0] PC_src,
-    input logic [31:0] imm,
-    input logic [31:0] alu_out,
-    output logic [31:0] pc_out,
-    output logic [31:0] pc_plus_4,
-    output logic [31:0] pc_plus_imm
+    input logic pc_write_en, // from controller, decides when PC updates
+    input logic [1:0] PC_src, // from controller, decides PC input mux
+    input logic [31:0] imm, // from decoder 
+    input logic [31:0] alu_out, // out from ALU
+    output logic [31:0] pc_out, // to memory addr mux
+    output logic [31:0] pc_plus_4, // To RF input mux
+    output logic [31:0] pc_plus_imm // To RF input mux
 );
     logic [31:0] pc_next;
 
@@ -27,6 +27,6 @@ module program_counter (
     // PC register
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n) pc_out <= 32'd0;
-        else if (pc_en) pc_out <= pc_next;
+        else if (pc_write_en) pc_out <= pc_next;
     end
 endmodule

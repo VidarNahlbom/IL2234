@@ -5,10 +5,10 @@
 module memory_write_unit (
     input logic mem_write, // control signal from controller for enabling or disabling writes
     input logic [1:0] addr_lo, // ALU result [1:0]: byte offset
-    input logic [2:0] func3, // 000 SB, 001 SH, 010 SW
+    input logic [2:0] func3, // from decoder, 000 SB, 001 SH, 010 SW
     input logic [31:0] rs2_data, // store data from RF
     output logic [31:0] data_out, // lane-replicated data to memory
-    output logic [3:0] write_en 
+    output logic [3:0] write_en // control signal to memory
 );
     always_comb begin
         write_en = 4'b0000;

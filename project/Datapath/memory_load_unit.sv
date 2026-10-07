@@ -1,8 +1,8 @@
 module memory_load_unit (
     input logic [31:0] mem_data, // full word from memory
     input logic [1:0] addr_lo, // ALU result [1:0]: byte offset
-    input logic [2:0] func3, // 000 LB, 001 LH, 010 LW, 100 LBU, 101 LHU
-    output logic [31:0] load_data
+    input logic [2:0] func3, // from decoder, 000 LB, 001 LH, 010 LW, 100 LBU, 101 LHU
+    output logic [31:0] load_data // to RF input mux
 );
     logic [7:0]  byte_sel;
     logic [15:0] half_sel;

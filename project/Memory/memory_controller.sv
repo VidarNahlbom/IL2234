@@ -1,15 +1,4 @@
-// currently i just have a read_en signal simply because the PDF for milestone 2 has one, but i think
-// it is up to us if we want to have it.
-// now it just signals state changes and mem_ready
-
-// With both a write_en and a read_en, we have to decide which one takes priority incase both are high
-// We can also tie a chip_en to ena wire of sram_inst
-// currently if any enable signal (even single bit) is high, chip is enabled
-// and will either read or write.
-// So data out will change when read_en is low but we wrote to somewhere, which is bad
-
-// ive now hardwired chip to be enabled, so data_out updated continiously
-
+// Write has priority over read, shouldnt matter however as they shouldnt be high at the same time ever. 
 // Read has latency 1, write has latency 0. 
 
 module memory_controller (

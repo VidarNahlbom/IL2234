@@ -3,12 +3,12 @@ module Decoder (
     input logic zero, // zero flag from ALU
     
     // Instruction fields
-    output logic [6:0] opcode,
-    output logic [11:7] rd,
-    output logic [14:12] func3,
-    output logic [19:15] rs1,
-    output logic [24:20] rs2,
-    output logic [31:25] func7, 
+    //output logic [6:0] opcode, // Internal
+    output logic [11:7] rd, // to RF write_addr
+    output logic [14:12] func3, // To memory write and read units
+    output logic [19:15] rs1, // to RF read_addr_1
+    output logic [24:20] rs2, // to RF read_addr_2
+    //output logic [31:25] func7, // Internal
     output logic [31:0] imm, // sign-extended
 
     // Flag outputs
@@ -17,10 +17,10 @@ module Decoder (
     output logic is_store, // makes controller go to execute-2, among other things
 
     // Control signals for datapath
-    output logic [1:0] rf_write_src, // 00: ALU result, 01: memory data, 10: PC+4, 11: PC+imm
+    output logic [1:0] rf_write_src, // To RF input mux, 00: ALU result, 01: memory data, 10: PC+4, 11: PC+imm
     output logic ALU_b_src, // 0: RF data_out_2, 1: imm
-    output logic [3:0] ALU_opcode,
-    output logic [1:0] PC_src, // 00: PC+4, 01: PC+imm (JAL & branches), 10: ALU result & ~3 (JALR)
+    output logic [3:0] ALU_opcode, // To ALU, decides ALU operation
+    output logic [1:0] PC_src, // To PC input mux, 00: PC+4, 01: PC+imm (JAL & branches), 10: ALU result & ~3 (JALR)
 );
     // Opcodes
     localparam logic [6:0] OP_R      = 7'b0110011;
@@ -45,6 +45,10 @@ module Decoder (
     localparam logic [3:0] ALU_OR     = 4'b1100;
     localparam logic [3:0] ALU_AND    = 4'b1110;
     localparam logic [3:0] ALU_PASS_B = 4'b1111;
+
+    // internal signals
+    logic [6:0] opcode;
+    logic [6:0] func7;
 
     // Instruction slicing
     assign opcode = data_in[6:0];
