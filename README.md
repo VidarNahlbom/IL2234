@@ -3,7 +3,7 @@ this repo is use by Project **Group 16** in order to coordinate work amongst pee
 There is also a Whattsapp group used for communication.
 
 ## Organization
-**Admin:** Vidar Nahlbom, vidarch@kth.se
+**Admin:** Vidar Nahlbom, vidarcn@kth.se
 
 **Member**: Matyas Krejci, krejci@kth.se
 
