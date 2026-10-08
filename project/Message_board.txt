@@ -1,4 +1,7 @@
 Message board for info related to the project, should be kept updated making it easier than using the whatsapp group
-1. Half word writing was not tested in milestone 2, has to be tested so that the memory can handle it because its part of the RISC-V ISA. the test should also include SH at the upper half of the word, and the lane replication in memory_write_unit has to go with it
-2. We have to decide if decoder should take zero flag as input to generate the branching logic, or if that should be handled by separate module in the datapath
-3. understand what they mean by "Note that the program counter is stored with the increment already applied." for JAL instruction.
+1. We have to decide if decoder should take zero flag as input to generate the branching logic, or if that should be handled by separate module in the datapath
+2. understand what they mean by "Note that the program counter is stored with the increment already applied." for JAL instruction.
+
+Stale mem_ready entering Fetch. Execute-2 ends on a cycle where mem_ready = 1, and the next cycle is Fetch. If mem_ready is still high in that first Fetch cycle, the controller captures the IR from stale data and moves on. It must drop low before the new request completes.
+currently mem can keep mem_ready high continiously if writes are done or smth, check.
+Stale mem_ready entering Execute-2. The same goes for the cycle after Execute-1. Execute-2 must not see a leftover mem_ready from the fetch.

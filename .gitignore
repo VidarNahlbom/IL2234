@@ -27,3 +27,4 @@
 !project/Datapath/memory_load_unit.sv
 !project/Datapath/program_counter.sv
 !project/Datapath/instruction_register.sv
+!project/controller/controller.sv
