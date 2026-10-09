@@ -2,7 +2,7 @@ module program_counter (
     input logic clk,
     input logic rst_n,
     input logic pc_write_en, // from controller, decides when PC updates
-    input logic [1:0] PC_src, // from controller, decides PC input mux
+    input logic [1:0] pc_src, // from controller, decides PC input mux
     input logic [31:0] imm, // from decoder 
     input logic [31:0] alu_out, // out from ALU
     output logic [31:0] pc_out, // to memory addr mux
@@ -17,10 +17,10 @@ module program_counter (
 
     // PC input mux(es)
     always_comb begin
-        case (PC_src)
+        case (pc_src)
             2'b01: pc_next = pc_plus_imm; // JAL, taken branch
             2'b10: pc_next = {alu_out[31:2], 2'b00}; // JALR
-            default: pc_next = pc_plus_4; // normal flow (PC_src = 2'b00)
+            default: pc_next = pc_plus_4; // normal flow (pc_src = 2'b00)
         endcase
     end
 

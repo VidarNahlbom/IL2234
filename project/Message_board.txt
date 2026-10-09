@@ -1,8 +1,42 @@
 Message board for info related to the project, should be kept updated making it easier than using the whatsapp group
-1. understand what they mean by "Note that the program counter is stored with the increment already applied." for JAL instruction.
-2. Lowest bit in branch imm left undefined. 
+
+Todo: schematic for datapath, schematic controller, testbench for all, datapath file, top file
+milestone 4
+
+should schematics be combined? so datapath and controller on the same one?  
+yes for interface and bus size and whaterver, so yes
+
+
+JALR can be implemented with alu doing pc+imm, dedicated adder not needed!!!!
+WHATEVER IT WORKS CURRENTLY NO NEED TO CHANGE
+
+
 
 
 Stale mem_ready entering Fetch. Execute-2 ends on a cycle where mem_ready = 1, and the next cycle is Fetch. If mem_ready is still high in that first Fetch cycle, the controller captures the IR from stale data and moves on. It must drop low before the new request completes.
 currently mem can keep mem_ready high continiously if writes are done or smth, check.
 Stale mem_ready entering Execute-2. The same goes for the cycle after Execute-1. Execute-2 must not see a leftover mem_ready from the fetch.
+
+
+random notes:
+mem_ready
+opcode
+func3
+func7
+alu_zero
+rf_chip_en
+rf_write_en_n
+mem_addr_src
+mem_write_unit_en
+mem_read_en
+ir_write_en
+pc_write_en
+rf_write_src
+alu_b_src
+alu_opcode
+pc_src
+
+
+~((opcode != 1100011 & opcode != 0100011) & opcode != 0000011) / rf_write_en_n = 1
+((opcode != 1100011 & opcode != 0100011) & opcode != 0000011) / rf_write_en_n = 0
+

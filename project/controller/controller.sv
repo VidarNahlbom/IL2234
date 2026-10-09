@@ -14,9 +14,9 @@ module controller (
     output logic ir_write_en,
     output logic pc_write_en,
     output logic [1:0] rf_write_src, // To RF input mux, 00: ALU result, 01: memory data, 10: PC+4, 11: PC+imm
-    output logic ALU_b_src, // 0: RF data_out_2, 1: imm
-    output logic [3:0] ALU_opcode, // To ALU, decides ALU operation
-    output logic [1:0] PC_src // To PC input mux, 00: PC+4, 01: PC+imm (JAL & taken branches), 10: ALU result & ~3 (JALR)
+    output logic alu_b_src, // 0: RF data_out_2, 1: imm
+    output logic [3:0] alu_opcode, // To ALU, decides ALU operation
+    output logic [1:0] pc_src // To PC input mux, 00: PC+4, 01: PC+imm (JAL & taken branches), 10: ALU result & ~3 (JALR)
 );
     // Order of operations:
     // PC is at addr 0x
@@ -82,11 +82,11 @@ module controller (
         is_branch = 1'b0;
         is_load = 1'b0;
         is_store = 1'b0;
-        ALU_b_src = 1'b0;
+        alu_b_src = 1'b0;
         branch_inv = 1'b0;
-        ALU_opcode = 4'b0000;
+        alu_opcode = 4'b0000;
         rf_write_src = 2'b00;
-        PC_src = 2'b00; 
+        pc_src = 2'b00; 
 
         case (opcode)
         
@@ -94,22 +94,22 @@ module controller (
             // Differ only in ALU b input and SUB operation
             OP_R, OP_I: begin
                 writes_rf = 1'b1;
-                ALU_b_src = (opcode == OP_I);
+                alu_b_src = (opcode == OP_I);
 
                 case (func3)
                     3'b000: begin
                         // ADDI has no SUB form, only R-type uses func7[5] here
-                        if (opcode == OP_R && func7[5]) ALU_opcode = ALU_SUB;
-                        else ALU_opcode = ALU_ADD;
+                        if (opcode == OP_R && func7[5]) alu_opcode = ALU_SUB;
+                        else alu_opcode = ALU_ADD;
                     end
-                    3'b001: ALU_opcode = ALU_SLL;
-                    3'b010: ALU_opcode = ALU_SLT;
-                    3'b011: ALU_opcode = ALU_SLTU;
-                    3'b100: ALU_opcode = ALU_XOR;
-                    3'b101: ALU_opcode = func7[5] ? ALU_SRA : ALU_SRL; // SRL/SRA, SRLI/SRAI
-                    3'b110: ALU_opcode = ALU_OR;
-                    3'b111: ALU_opcode = ALU_AND;
-                    default: ALU_opcode = ALU_ADD;
+                    3'b001: alu_opcode = ALU_SLL;
+                    3'b010: alu_opcode = ALU_SLT;
+                    3'b011: alu_opcode = ALU_SLTU;
+                    3'b100: alu_opcode = ALU_XOR;
+                    3'b101: alu_opcode = func7[5] ? ALU_SRA : ALU_SRL; // SRL/SRA, SRLI/SRAI
+                    3'b110: alu_opcode = ALU_OR;
+                    3'b111: alu_opcode = ALU_AND;
+                    default: alu_opcode = ALU_ADD;
                 endcase
             end
 
@@ -117,8 +117,8 @@ module controller (
             // imm from the decoder is already shifted, so we just use pass_b to send that straight to the RF input mux. 
             OP_LUI: begin
                 writes_rf = 1'b1;
-                ALU_b_src = 1'b1;
-                ALU_opcode = ALU_PASS_B;
+                alu_b_src = 1'b1;
+                alu_opcode = ALU_PASS_B;
             end
 
             // AUIPC: x[rd] = PC + (imm[31:12] << 12)
@@ -134,8 +134,8 @@ module controller (
             OP_LOAD: begin
                 is_load = 1'b1;
                 writes_rf = 1'b1;
-                ALU_b_src = 1'b1;
-                ALU_opcode = ALU_ADD; 
+                alu_b_src = 1'b1;
+                alu_opcode = ALU_ADD; 
                 rf_write_src = 2'b01; // data_out from memory
             end
 
@@ -144,8 +144,8 @@ module controller (
             // stores x[rs2] in mem. 
             OP_STORE: begin
                 is_store = 1'b1; // makes mem_addr_src = 1
-                ALU_b_src = 1'b1;
-                ALU_opcode = ALU_ADD;
+                alu_b_src = 1'b1;
+                alu_opcode = ALU_ADD;
             end
             
             // Branches: ALU compares x[rs1] & x[rs2], result is in the zero flag
@@ -154,22 +154,22 @@ module controller (
             OP_BRANCH: begin
                 is_branch = 1'b1;
                 case (func3)
-                    3'b000: begin ALU_opcode = ALU_SUB; branch_inv = 1'b0; end // BEQ
-                    3'b001: begin ALU_opcode = ALU_SUB; branch_inv = 1'b1; end // BNE
-                    3'b100: begin ALU_opcode = ALU_SLT; branch_inv = 1'b1; end // BLT
-                    3'b101: begin ALU_opcode = ALU_SLT; branch_inv = 1'b0; end // BGE
-                    3'b110: begin ALU_opcode = ALU_SLTU; branch_inv = 1'b1; end // BLTU
-                    3'b111: begin ALU_opcode = ALU_SLTU; branch_inv = 1'b0; end // BGEU
+                    3'b000: begin alu_opcode = ALU_SUB; branch_inv = 1'b0; end // BEQ
+                    3'b001: begin alu_opcode = ALU_SUB; branch_inv = 1'b1; end // BNE
+                    3'b100: begin alu_opcode = ALU_SLT; branch_inv = 1'b1; end // BLT
+                    3'b101: begin alu_opcode = ALU_SLT; branch_inv = 1'b0; end // BGE
+                    3'b110: begin alu_opcode = ALU_SLTU; branch_inv = 1'b1; end // BLTU
+                    3'b111: begin alu_opcode = ALU_SLTU; branch_inv = 1'b0; end // BGEU
                     default: is_branch = 1'b0; // illegal: treat as no-op
                 endcase
-                if (is_branch & (alu_zero ^ branch_inv)) PC_src = 2'b01;
+                if (is_branch & (alu_zero ^ branch_inv)) pc_src = 2'b01;
             end
 
             // JAL: x[rd] = PC + 4, PC = PC + imm
             OP_JAL: begin
                 writes_rf = 1'b1;
                 rf_write_src = 2'b10; // PC+4
-                PC_src = 2'b01; // PC+imm
+                pc_src = 2'b01; // PC+imm
             end
 
             // JALR: x[rd] = PC + 4, PC = (x[rs1] + imm) & ~0b11
@@ -177,10 +177,10 @@ module controller (
             // unsure for now
             OP_JALR: begin
                 writes_rf = 1'b1;
-                ALU_b_src = 1'b1;
-                ALU_opcode = ALU_ADD;
+                alu_b_src = 1'b1;
+                alu_opcode = ALU_ADD;
                 rf_write_src = 2'b10; // PC+4
-                PC_src = 2'b10; // ALU result & ~3
+                pc_src = 2'b10; // ALU result & ~3
             end
 
             default: ; // defaults to PC += 4;
