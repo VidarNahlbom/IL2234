@@ -2,6 +2,9 @@ module controller (
     input logic clk,
     input logic rst_n,
     input logic mem_ready,
+    input logic is_branch, // decoder signal for branch instructions
+    input logic branch_inv, // decoder signal, branch is taken if zero is low instead of high
+    input logic alu_zero, // zero flag from the ALU, flags[0] in {overflow, negative, zero}
     input logic writes_rf, // decoder signal for if instruction writes to rf
     input logic is_load, // decoder signal for load instructions
     input logic is_store, // decoder signal for store instructions
@@ -11,7 +14,8 @@ module controller (
     output logic mem_write_unit_en, // goes to memory write unit, not directly to memory write_en
     output logic mem_read_en,
     output logic ir_write_en,
-    output logic pc_write_en
+    output logic pc_write_en,
+    output logic branch_taken // to PC input mux in datapath, high selects PC+imm over the decoder PC_src
 );
     // Order of operations:
     // PC is at addr 0x
@@ -44,6 +48,7 @@ module controller (
         mem_read_en = 1'b0;
         ir_write_en = 1'b0;
         pc_write_en = 1'b0;
+        branch_taken = 1'b0;
         next_state = Fetch;
 
         case (current_state)
@@ -59,6 +64,9 @@ module controller (
                 // use RF same cycle. 
                 rf_write_en_n = ~(writes_rf & ~is_load); // if it is writing to RF and isnt a load, this sets it to 0 (enabled), otherwise we write in execute2
                 pc_write_en = ~(is_store | is_load); // if its not a mem operation, we go to next instruction next state
+                // branches finish in this state, ALU has compared x[rs1] and x[rs2] and the result is in the zero flag
+                // taken if zero is high, or if zero is low when branch_inv is set
+                branch_taken = is_branch & (alu_zero ^ branch_inv);
                 if (is_store | is_load) next_state = Execute2;
             end
             Execute2: begin
@@ -73,5 +81,3 @@ module controller (
         endcase
     end
 endmodule
-
-

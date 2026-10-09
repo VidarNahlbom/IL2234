@@ -1,26 +1,27 @@
 module Decoder (
     input logic [31:0] data_in, // Instruction from IR
-    input logic zero, // zero flag from ALU
     
     // Instruction fields
-    //output logic [6:0] opcode, // Internal
+    output logic [6:0] opcode,
     output logic [11:7] rd, // to RF write_addr
     output logic [14:12] func3, // To memory write and read units
     output logic [19:15] rs1, // to RF read_addr_1
     output logic [24:20] rs2, // to RF read_addr_2
-    //output logic [31:25] func7, // Internal
+    output logic [31:25] func7, 
     output logic [31:0] imm, // sign-extended
 
     // Flag outputs
     output logic writes_rf, // Signifies that operation has to write to RF, defending against unknown opcodes and making branches not write to RF
     output logic is_load, // makes controller go to execute-2, mem_addr_src to 1.
     output logic is_store, // makes controller go to execute-2, among other things
+    output logic is_branch, // enabled branching logic in the controller 
 
     // Control signals for datapath
+    output logic branch_inv, // Makes it so that the branch is taken if zero is low, instead of high
     output logic [1:0] rf_write_src, // To RF input mux, 00: ALU result, 01: memory data, 10: PC+4, 11: PC+imm
     output logic ALU_b_src, // 0: RF data_out_2, 1: imm
     output logic [3:0] ALU_opcode, // To ALU, decides ALU operation
-    output logic [1:0] PC_src, // To PC input mux, 00: PC+4, 01: PC+imm (JAL & branches), 10: ALU result & ~3 (JALR)
+    output logic [1:0] PC_src // To PC input mux, 00: PC+4, 01: PC+imm (JAL & branches), 10: ALU result & ~3 (JALR)
 );
     // Opcodes
     localparam logic [6:0] OP_R      = 7'b0110011;
@@ -62,9 +63,11 @@ module Decoder (
         // Defaults
         imm = 32'b0;
         writes_rf = 1'b0;
+        is_branch = 1'b0;
         is_load = 1'b0;
         is_store = 1'b0;
         ALU_b_src = 1'b0;
+        branch_inv = 1'b0;
         ALU_opcode = 4'b0000;
         rf_write_src = 2'b00;
         PC_src = 2'b00; 
@@ -139,44 +142,25 @@ module Decoder (
                 ALU_opcode = ALU_ADD;
             end
             
-            // Branches: ALU compares x[rs1] & x[rs2], taken path decided in datapath
-            // Evaluates based on the zero flag from the ALU.
-            // I dont know if its allowed for the decoder to use that flag as input
-            // if it is, we only need to make it so that the PC input mux used the PC_out + imm input if zero flag is high
-            // during this operation
-            // If that is not allowed, we have the signal is_branch sent to controller, which will control PC_src
-            // but currently PC_src is controller by decoder, so lets use the first option. 
-            
-            // We could use direct if statements here, so like if(!flags[2]) PC_in = PC_out + imm; 
-            // By giving the decoder direct control over these things.
-            // But this is not the way we have done things in other parts of the circuit
-            // There we only control muxes that control the inputs to different parts
-            // So to stay in life with this behaviour we will keep to just controlling a mux here too
-            // But the mux behaviour and inputs has to be defined before hand
-            // So the PC schematic is being redesigned to have:
-            // 3 input mux: 0: PC_out + 32'd4, 1: PC_out + imm, 2: ALU_out & ~32'd3 (where ALU_out is x[rs1] + imm)
-            // The addition has to be done with dedicated adders.
-            // This has to be defined in the PC module later. 
-
-            // Another option, if we want to keep "decoder" pure and only use the data_in input
-            // is to have this branching logic sent signals to another little gate in the datapath that implements the same logic
-            // that datapath would have to be something like 
-            //assign branch_taken = is_branch & (zero ^ branch_inv);
-            //assign PC_sel = branch_taken ? 2'b01 : PC_src;
-            // Where is_branch is just a signal from decoder that current instruction is a branch operation
-            // and branch_inv informs the gate in the datapath it the branch should be taken if the zero flag is high or low. 
+            // Branches: ALU compares x[rs1] & x[rs2], taken path decided in the controller
+            // Having the decoder decide if branch is taken via the ALU flags was not allowed, so this runs through the controller
+            // The decoder only tells the controller that it is a branch (is_branch)
+            // and which zero flag polarity means taken (branch_inv)
+            // The controller then outputs branch_taken, and the gate in the datapath is
+            // assign PC_sel = branch_taken ? 2'b01 : PC_src;
             OP_BRANCH: begin
                 // PDF does not describe what lowest bit should be, maybe it doesnt matter?
                 // Currently assumed to be 0
                 imm = {{19{data_in[31]}}, data_in[31], data_in[7], data_in[30:25], data_in[11:8], 1'b0}; // sign extended
+                is_branch = 1'b1;
                 case (func3)
-                    3'b000: begin ALU_opcode = ALU_SUB;  if ( zero) PC_src = 2'b01; end // BEQ
-                    3'b001: begin ALU_opcode = ALU_SUB;  if (!zero) PC_src = 2'b01; end // BNE
-                    3'b100: begin ALU_opcode = ALU_SLT;  if (!zero) PC_src = 2'b01; end // BLT
-                    3'b101: begin ALU_opcode = ALU_SLT;  if ( zero) PC_src = 2'b01; end // BGE
-                    3'b110: begin ALU_opcode = ALU_SLTU; if (!zero) PC_src = 2'b01; end // BLTU
-                    3'b111: begin ALU_opcode = ALU_SLTU; if ( zero) PC_src = 2'b01; end // BGEU
-                    default: ; // illegal: treat as no-op
+                    3'b000: begin ALU_opcode = ALU_SUB; branch_inv = 1'b0; end // BEQ
+                    3'b001: begin ALU_opcode = ALU_SUB; branch_inv = 1'b1; end // BNE
+                    3'b100: begin ALU_opcode = ALU_SLT; branch_inv = 1'b1; end // BLT
+                    3'b101: begin ALU_opcode = ALU_SLT; branch_inv = 1'b0; end // BGE
+                    3'b110: begin ALU_opcode = ALU_SLTU; branch_inv = 1'b1; end // BLTU
+                    3'b111: begin ALU_opcode = ALU_SLTU; branch_inv = 1'b0; end // BGEU
+                    default: is_branch = 1'b0; // illegal: treat as no-op
                 endcase
             end
 
