@@ -30,3 +30,5 @@
 !project/controller/controller.sv
 !project/top/cpu_top.sv
 !project/Datapath/datapath.sv
+!state diagram.pdf
+!state table.pdf
