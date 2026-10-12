@@ -31,5 +31,6 @@
 !project/controller/Controller_Tb.sv
 !project/top/cpu_top.sv
 !project/Datapath/datapath.sv
-!state diagram.pdf
-!state table.pdf
+!project/state diagram.pdf
+!project/state table.pdf
+!project/RISC-V_top.sv
