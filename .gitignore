@@ -28,3 +28,5 @@
 !project/Datapath/program_counter.sv
 !project/Datapath/instruction_register.sv
 !project/controller/controller.sv
+!project/top/cpu_top.sv
+!project/Datapath/datapath.sv
