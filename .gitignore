@@ -28,6 +28,7 @@
 !project/Datapath/program_counter.sv
 !project/Datapath/instruction_register.sv
 !project/controller/controller.sv
+!project/controller/Controller_Tb.sv
 !project/top/cpu_top.sv
 !project/Datapath/datapath.sv
 !state diagram.pdf
