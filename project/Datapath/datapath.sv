@@ -28,8 +28,7 @@ module datapath (
     output logic [6:0] func7,
     output logic alu_zero // zero flag from the ALU
 
-)
-
+);
     // internal signals
     logic [31:0] ir_out; // instruction from IR to decoder
     logic [4:0] rd;
