@@ -36,3 +36,4 @@
 !project/RISC-V_top.sv
 !project/datapath schematic.pdf
 !project/datapath/Decoder_tb.sv
+!project/RISC-V_top_tb.sv

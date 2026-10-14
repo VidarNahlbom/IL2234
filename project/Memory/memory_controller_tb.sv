@@ -1,5 +1,8 @@
 `timescale 1ns / 1ps
 
+// TB was not updated after a new operation directly after DONE was disallowed
+// But it still passed TB after change. 
+
 module memory_controller_tb;
 
     logic        clk;

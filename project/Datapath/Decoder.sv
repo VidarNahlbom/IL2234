@@ -3,11 +3,11 @@ module Decoder (
     
     // Instruction fields
     output logic [6:0] opcode, // to controller
-    output logic [11:7] rd, // to RF write_addr
-    output logic [14:12] func3, // to controller, memory write and read units
-    output logic [19:15] rs1, // to RF read_addr_1
-    output logic [24:20] rs2, // to RF read_addr_2
-    output logic [31:25] func7, // to controller
+    output logic [4:0] rd, // to RF write_addr
+    output logic [2:0] func3, // to controller, memory write and read units
+    output logic [4:0] rs1, // to RF read_addr_1
+    output logic [4:0] rs2, // to RF read_addr_2
+    output logic [6:0] func7, // to controller
     output logic [31:0] imm // sign-extended, to ALU b input mux and PC adder
 );
     // Opcodes
