@@ -13,6 +13,14 @@ module memory_controller (
     input   logic       read_en,
     output  logic       mem_ready
 );
+
+    // ADDED FOR MILESTONE 4
+    // Load the firmware.coe file on startup
+    initial begin
+        $readmemh("firmware.coe", mem);
+    end
+
+    
     // declaration
     typedef enum logic[1:0] {
         IDLE,

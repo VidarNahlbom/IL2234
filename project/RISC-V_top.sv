@@ -20,10 +20,11 @@ module riscv_top (
         .read_en(read_en)
     );
 
+    // Memory only has 16 address bits (64 KiB), upper CPU address bits are unused
     memory_controller mem_cont_inst (
         .clk(clk),
         .rst_n(rst_n),
-        .addr(addr),
+        .addr(addr[15:0]),
         .data_in(cpu_data_out),
         .data_out(cpu_data_in),
         .write_en(write_en),
