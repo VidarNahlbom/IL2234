@@ -35,3 +35,4 @@
 !project/state table.pdf
 !project/RISC-V_top.sv
 !project/datapath schematic.pdf
+!project/datapath/Decoder_tb.sv
