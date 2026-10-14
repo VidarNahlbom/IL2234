@@ -1,7 +1,7 @@
 Message board for info related to the project, should be kept updated making it easier than using the whatsapp group
 
 Todo: testbench for all
-milestone 4
+milestone 4 part 1 own tb, milestone 4 part 2
 
 
 JALR can be implemented with alu doing pc+imm, dedicated adder not needed!!!!
@@ -31,4 +31,3 @@ pc_src
 
 ~((opcode != 1100011 & opcode != 0100011) & opcode != 0000011) / rf_write_en_n = 1
 ((opcode != 1100011 & opcode != 0100011) & opcode != 0000011) / rf_write_en_n = 0
-

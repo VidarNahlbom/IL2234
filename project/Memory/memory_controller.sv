@@ -9,17 +9,10 @@ module memory_controller (
     input   logic[15:0] addr, 
     input   logic[31:0] data_in, 
     output  logic[31:0] data_out,
-    input   logic[3:0]  write_en, // byte-wise write mask, if 0000 then read enable
+    input   logic[3 :0]  write_en, // byte-wise write mask, if 0000 then read enable
     input   logic       read_en,
     output  logic       mem_ready
 );
-
-    // ADDED FOR MILESTONE 4
-    // Load the firmware.coe file on startup
-    initial begin
-        $readmemh("firmware.coe", mem);
-    end
-
     
     // declaration
     typedef enum logic[1:0] {
@@ -70,9 +63,17 @@ module memory_controller (
             end
             DONE: begin
                 mem_ready = 1'b1;
+
+                // THIS CAUSED ERRORS WITH MEM_READY AND READ_EN
+                // simultaneous mem_ready and read_en signals such as during the end of a fetch
+                // caused memory to go into a second read operation when cpu entered execute1
+                // which caused an errenous mem_ready signal to appear either during the fetch or execute2 after the execute1
+                // which broke things.
+                // To fix this no operations are allowed before mem_ready goes low in IDLE
+                // so no mem op starts from DONE
                 // and then same logic as IDLE:
-                if (|write_en) next_state = DONE;
-                else if (read_en) next_state = WAIT;
+                //if (|write_en) next_state = DONE;
+                //else if (read_en) next_state = WAIT;
             end
         endcase
     end

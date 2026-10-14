@@ -9,7 +9,7 @@ module riscv_top (
     logic [3:0] write_en;
     logic read_en;
 
-    cpu_top cpu_top_inst(
+    cpu_top cpu_top_inst (
         .clk(clk),
         .rst_n(rst_n),
         .data_in(cpu_data_in),
