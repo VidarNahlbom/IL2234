@@ -37,3 +37,5 @@
 !project/datapath schematic.pdf
 !project/datapath/Decoder_tb.sv
 !project/RISC-V_top_tb.sv
+!project/top/FPGA_Display.sv
+!project/top/urbana_top.sv

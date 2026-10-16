@@ -9,7 +9,7 @@ module datapath (
     output logic [31:0] addr, // memory address, PC or ALU result
     output logic [31:0] mem_data_in, // data to write to memory, lanes already replicated by memory write unit
     output logic [3:0] mem_write_en, // byte-wise write mask to memory
-
+//    output logic pc_write_en_debug,
     // From controller
     input logic rf_chip_en,
     input logic rf_write_en_n,
@@ -21,12 +21,13 @@ module datapath (
     input logic alu_b_src, // 0: RF data_out_2, 1: imm
     input logic [3:0] alu_opcode, // To ALU, decides ALU operation
     input logic [1:0] pc_src, // To PC input mux, 00: PC+4, 01: PC+imm (JAL & taken branches), 10: ALU result & ~3 (JALR)
-
+    
     // To controller
     output logic [6:0] opcode,
     output logic [2:0] func3, // also goes to memory load and write units
     output logic [6:0] func7,
-    output logic alu_zero // zero flag from the ALU
+    output logic alu_zero, // zero flag from the ALU
+    output logic [31:0] pc_debug
 
 );
     // internal signals
@@ -46,7 +47,7 @@ module datapath (
     logic [31:0] pc_out;
     logic [31:0] pc_plus_4;
     logic [31:0] pc_plus_imm;
- 
+//    assign pc_write_en_debug = pc_write_en;
     ALU #(.BW(32)) alu_inst (
         .in_a(in_a),
         .in_b(in_b),
@@ -123,6 +124,8 @@ module datapath (
  
     // Memory address mux, 0: PC (fetch), 1: ALU result (loads and stores in execute-2)
     assign addr = mem_addr_src ? alu_out : pc_out;
+    
+    
  
     // RF input mux
     always_comb begin
@@ -137,6 +140,7 @@ module datapath (
  
     // Zero flag to controller, used for branches
     assign alu_zero = alu_flags[0];
+    assign pc_debug = pc_out;
 
 endmodule
 

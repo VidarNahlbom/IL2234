@@ -8,7 +8,9 @@ module cpu_top (
     output logic [31:0] addr, // memory address, lower two bits used by memory write unit
     output logic [31:0] data_out, // data to write to memory
     output logic [3:0] write_en, // byte-wise write mask
-    output logic read_en
+    output logic read_en,
+    output logic [31:0] pc_debug
+//    output logic pc_write_en_debug
 );
 
     // Controller to datapath
@@ -70,7 +72,9 @@ module cpu_top (
         .opcode(opcode),
         .func3(func3),
         .func7(func7),
-        .alu_zero(alu_zero)
+        .alu_zero(alu_zero),
+        .pc_debug(pc_debug)
+//        .pc_write_en_debug(pc_write_en_debug)
     );
 
 endmodule
