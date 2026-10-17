@@ -5,8 +5,8 @@ module riscv_top (
     output logic [31:0] mem_debug_data,
     output logic [3:0] mem_debug_write,
     output logic read_en_debug,
-    output logic mem_ready_debug
-//    output logic pc_write_en_debug
+    output logic mem_ready_debug,
+    output logic pc_write_en_debug
 );
     logic [31:0] cpu_data_in;
     logic mem_ready;
@@ -29,7 +29,7 @@ module riscv_top (
         .data_out(cpu_data_out),
         .write_en(write_en),
         .read_en(read_en),
-//        .pc_write_en_debug(pc_write_en_debug),
+        .pc_write_en_debug(pc_write_en_debug),
         .pc_debug(pc_debug)
     );
 

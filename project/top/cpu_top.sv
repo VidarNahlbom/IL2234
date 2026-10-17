@@ -9,10 +9,9 @@ module cpu_top (
     output logic [31:0] data_out, // data to write to memory
     output logic [3:0] write_en, // byte-wise write mask
     output logic read_en,
-    output logic [31:0] pc_debug
-//    output logic pc_write_en_debug
+    output logic [31:0] pc_debug,
+    output logic pc_write_en_debug
 );
-
     // Controller to datapath
     logic rf_chip_en;
     logic rf_write_en_n;
@@ -20,6 +19,7 @@ module cpu_top (
     logic mem_write_unit_en;
     logic ir_write_en;
     logic pc_write_en;
+    assign pc_write_en_debug = pc_write_en;
     logic [1:0] rf_write_src;
     logic alu_b_src;
     logic [3:0] alu_opcode;

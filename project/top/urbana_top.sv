@@ -6,9 +6,9 @@ module clock_divider #(
     output logic clk_out
     );
 
-    // counter signal
-    logic [$clog2(DIVISOR)-1:0] counter;
-//    logic pc_write_en_debug;
+
+//    logic [$clog2(DIVISOR)-1:0] counter;
+    logic [$clog2(DIVISOR+1)-1:0] counter;
 
      always_ff @(posedge clk_in or negedge rst_n) begin
        if (!rst_n) begin
@@ -38,6 +38,9 @@ module urbana_top (
    
     logic rst_n;
     assign rst_n = ~BTN[0];
+    // counter signal
+    logic cpu_clk;
+       logic pc_write_en_debug;
     
     //Info from CPU through debug signals
     logic [31:0] pc_debug;
@@ -48,16 +51,23 @@ module urbana_top (
     
     //LED controlled by fpga_diaplsy
     logic[14:0] LED_status;
-    
+    clock_divider #(
+    .DIVISOR(5000000)
+) cpu_clock_divider (
+    .rst_n(rst_n),
+    .clk_in(CLK_100MHZ),
+    .clk_out(cpu_clk)
+);
     //connect CPU and memory design
     riscv_top riscv_top_inst(
-        .clk(CLK_100MHZ),
+//        .clk(CLK_100MHZ),
+        .clk(cpu_clk),
         .rst_n(rst_n),
         .pc_debug(pc_debug),
         .mem_debug_data(mem_debug_data),
         .mem_debug_write(mem_debug_write),
         .read_en_debug(read_en_debug),
-//        .pc_write_en_debug(pc_write_en_debug),
+        .pc_write_en_debug(pc_write_en_debug),
         .mem_ready_debug(mem_ready_debug)
     );
     
@@ -70,7 +80,7 @@ module urbana_top (
         .mem_debug_write(mem_debug_write),
         .read_en_debug(read_en_debug),
         .mem_ready_debug(mem_ready_debug),
-//        .pc_write_en_debug(pc_write_en_debug),
+        .pc_write_en_debug(pc_write_en_debug),
         .LED(LED_status),
         .D0_AN(D0_AN),
         .D0_SEG(D0_SEG),
