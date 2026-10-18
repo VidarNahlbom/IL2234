@@ -775,9 +775,11 @@ module Instructions_tb(
             logic [4:0]  rd      = $urandom_range(1, 31);
             logic [11:0] imm     = $urandom_range(0, 100);
             logic [31:0] mem_val = $urandom();
+             
             
             // 1. Reset and disable clock
             rst_n   = 0;
+            clk_off = 1;
             
             // 2. Load instruction into memory (I-type Load Byte format)[cite: 2, 3, 5]
             raw_data_from_mem[6:0]   = 7'b0000011; // Opcode for loads[cite: 5]
@@ -788,26 +790,29 @@ module Instructions_tb(
             
             #1;
             rst_n   = 1;
+            clk_off = 0;
+            #5;
             
-            // CPU enters into fetch state. Alternatively this handles the flase posedge caused by cpu_off going low to high
-            @(posedge CLK);     
-            
-            // 3. Fetch state handshake. Tell the awaiting CPU that we are ready to send the intruction
-            @(posedge CLK); 
+            // Intruction ready. Allow for loading into IR for the next rising edge
+            @(posedge CLK);
             mem_ready = 1;
             
-            // 4. Move to Execute 1 (Address Calculation). Instruction read into IR and ALU can carry out calculation for memory_addr. 
-            @(posedge CLK); 
+            // Read data from memory into IR.
+            @(posedge CLK);
+            
+            // Now Check if the mem_address is updated
+            @(posedge CLK);
             mem_ready = 0;
             
-   
+            // In the next pos edge the memory address source is updated.
+            @(posedge CLK);
             // Verify computed memory address
             if (memory_addr === (reg_data_out_1_to_alu + {{20{imm[11]}}, imm})) begin  
                 $display("[PASS] %0d / %0d LB requested correct memory address.", i, N_runs_per_inst);
             end else begin
                 $display("[FAILED] %0d / %0d LB requested wrong memory address. Expected: %0b | Observed: %0b", 
                          i, N_runs_per_inst, (reg_data_out_1_to_alu + {{20{imm[11]}}, imm}), memory_addr);
-                continue;
+                //continue;
             end
             
             // 5. Provide simulated memory data for Execute 2[cite: 8]
@@ -828,6 +833,291 @@ module Instructions_tb(
             end else begin
                 $display("[FAILED] %0d / %0d LB Failed to sign extend. Expected: %0b | Observed: %0b", 
                          i, N_runs_per_inst, { {24{mem_val[7]}}, mem_val[7:0] }, Data_from_mem);
+            end
+        end
+    end
+    endtask
+    
+    
+task automatic validate_LH();
+    begin
+        $display("Testing the LH instruction, Will perform %0d iterations", N_runs_per_inst);
+        
+        for (int i = 1; i <= N_runs_per_inst; i++) begin
+            
+            logic [4:0]  rs1     = $urandom_range(1, 31); 
+            logic [4:0]  rd      = $urandom_range(1, 31);
+            logic [11:0] imm     = $urandom_range(0, 100);
+            logic [31:0] mem_val = $urandom();
+             
+            // 1. Reset and disable clock
+            rst_n   = 0;
+            clk_off = 1;
+            
+            // 2. Load instruction into memory (I-type Load Halfword format)[cite: 2, 3, 5]
+            raw_data_from_mem[6:0]   = 7'b0000011; // Opcode for loads[cite: 5]
+            raw_data_from_mem[11:7]  = rd;         // Destination reg[cite: 2, 3]
+            raw_data_from_mem[14:12] = 3'b001;     // func3 for LH[cite: 5]
+            raw_data_from_mem[19:15] = rs1;        // Source reg (base address)[cite: 2, 3]
+            raw_data_from_mem[31:20] = imm;        // 12-bit signed immediate offset[cite: 2, 3]
+            
+            #1;
+            rst_n   = 1;
+            clk_off = 0;
+            #5;
+            
+            // Instruction ready. Allow for loading into IR for the next rising edge
+            @(posedge CLK);
+            mem_ready = 1;
+            
+            // Read data from memory into IR.
+            @(posedge CLK);
+            
+            // Now Check if the mem_address is updated
+            @(posedge CLK);
+            mem_ready = 0;
+            
+            // In the next pos edge the memory address source is updated.
+            @(posedge CLK);
+            // Verify computed memory address
+            if (memory_addr === (reg_data_out_1_to_alu + {{20{imm[11]}}, imm})) begin  
+                $display("[PASS] %0d / %0d LH requested correct memory address.", i, N_runs_per_inst);
+            end else begin
+                $display("[FAILED] %0d / %0d LH requested wrong memory address. Expected: %0b | Observed: %0b", 
+                         i, N_runs_per_inst, (reg_data_out_1_to_alu + {{20{imm[11]}}, imm}), memory_addr);
+            end
+            
+            // 5. Provide simulated memory data for Execute 2[cite: 8]
+            raw_data_from_mem = mem_val;
+            #1; // Emulate memory read latency
+            
+            @(posedge CLK); // Enter Execute 2 state[cite: 8]
+            mem_ready = 1;
+            
+            @(posedge CLK);
+            mem_ready = 0;
+            
+            #1; // Settling time
+            
+            // 6. Verify sign-extended halfword data output (x[rd] = signext(MEM[x[rs1]+imm][15:0]))[cite: 5]
+            if (Data_from_mem === { {16{mem_val[15]}}, mem_val[15:0] }) begin
+                $display("[PASS] %0d / %0d LH sign-extension correct", i, N_runs_per_inst);
+            end else begin
+                $display("[FAILED] %0d / %0d LH Failed to sign extend. Expected: %0b | Observed: %0b", 
+                         i, N_runs_per_inst, { {16{mem_val[15]}}, mem_val[15:0] }, Data_from_mem);
+            end
+        end
+    end
+    endtask
+    
+task automatic validate_LW();
+    begin
+        $display("Testing the LW instruction, Will perform %0d iterations", N_runs_per_inst);
+        
+        for (int i = 1; i <= N_runs_per_inst; i++) begin
+            
+            logic [4:0]  rs1     = $urandom_range(1, 31); 
+            logic [4:0]  rd      = $urandom_range(1, 31);
+            logic [11:0] imm     = $urandom_range(0, 100);
+            logic [31:0] mem_val = $urandom();
+             
+            // 1. Reset and disable clock
+            rst_n   = 0;
+            clk_off = 1;
+            
+            // 2. Load instruction into memory (I-type Load Word format)[cite: 2, 3, 5]
+            raw_data_from_mem[6:0]   = 7'b0000011; // Opcode for loads[cite: 5]
+            raw_data_from_mem[11:7]  = rd;         // Destination reg[cite: 2, 3]
+            raw_data_from_mem[14:12] = 3'b010;     // func3 for LW[cite: 5]
+            raw_data_from_mem[19:15] = rs1;        // Source reg (base address)[cite: 2, 3]
+            raw_data_from_mem[31:20] = imm;        // 12-bit signed immediate offset[cite: 2, 3]
+            
+            #1;
+            rst_n   = 1;
+            clk_off = 0;
+            #5;
+            
+            // Instruction ready. Allow for loading into IR for the next rising edge
+            @(posedge CLK);
+            mem_ready = 1;
+            
+            // Read data from memory into IR.
+            @(posedge CLK);
+            
+            // Now Check if the mem_address is updated
+            @(posedge CLK);
+            mem_ready = 0;
+            
+            // In the next pos edge the memory address source is updated.
+            @(posedge CLK);
+            // Verify computed memory address
+            if (memory_addr === (reg_data_out_1_to_alu + {{20{imm[11]}}, imm})) begin  
+                $display("[PASS] %0d / %0d LW requested correct memory address.", i, N_runs_per_inst);
+            end else begin
+                $display("[FAILED] %0d / %0d LW requested wrong memory address. Expected: %0b | Observed: %0b", 
+                         i, N_runs_per_inst, (reg_data_out_1_to_alu + {{20{imm[11]}}, imm}), memory_addr);
+            end
+            
+            // 5. Provide simulated memory data for Execute 2[cite: 8]
+            raw_data_from_mem = mem_val;
+            #1; // Emulate memory read latency
+            
+            @(posedge CLK); // Enter Execute 2 state[cite: 8]
+            mem_ready = 1;
+            
+            @(posedge CLK);
+            mem_ready = 0;
+            
+            #1; // Settling time
+            
+            // 6. Verify full 32-bit word output (x[rd] = MEM[x[rs1]+imm][31:0])[cite: 5]
+            if (Data_from_mem === mem_val) begin
+                $display("[PASS] %0d / %0d LW word load correct", i, N_runs_per_inst);
+            end else begin
+                $display("[FAILED] %0d / %0d LW failed. Expected: %0h | Observed: %0h", 
+                         i, N_runs_per_inst, mem_val, Data_from_mem);
+            end
+        end
+    end
+    endtask
+    
+task automatic validate_LBU();
+    begin
+        $display("Testing the LBU instruction, Will perform %0d iterations", N_runs_per_inst);
+        
+        for (int i = 1; i <= N_runs_per_inst; i++) begin
+            
+            logic [4:0]  rs1     = $urandom_range(1, 31); 
+            logic [4:0]  rd      = $urandom_range(1, 31);
+            logic [11:0] imm     = $urandom_range(0, 100);
+            logic [31:0] mem_val = $urandom();
+             
+            // 1. Reset and disable clock
+            rst_n   = 0;
+            clk_off = 1;
+            
+            // 2. Load instruction into memory (I-type Load Byte Unsigned format)[cite: 2, 3, 5]
+            raw_data_from_mem[6:0]   = 7'b0000011; // Opcode for loads[cite: 5]
+            raw_data_from_mem[11:7]  = rd;         // Destination reg[cite: 2, 3]
+            raw_data_from_mem[14:12] = 3'b100;     // func3 for LBU[cite: 5]
+            raw_data_from_mem[19:15] = rs1;        // Source reg (base address)[cite: 2, 3]
+            raw_data_from_mem[31:20] = imm;        // 12-bit signed immediate offset[cite: 2, 3]
+            
+            #1;
+            rst_n   = 1;
+            clk_off = 0;
+            #5;
+            
+            // Instruction ready. Allow for loading into IR for the next rising edge
+            @(posedge CLK);
+            mem_ready = 1;
+            
+            // Read data from memory into IR.
+            @(posedge CLK);
+            
+            // Now Check if the mem_address is updated
+            @(posedge CLK);
+            mem_ready = 0;
+            
+            // In the next pos edge the memory address source is updated.
+            @(posedge CLK);
+            // Verify computed memory address
+            if (memory_addr === (reg_data_out_1_to_alu + {{20{imm[11]}}, imm})) begin  
+                $display("[PASS] %0d / %0d LBU requested correct memory address.", i, N_runs_per_inst);
+            end else begin
+                $display("[FAILED] %0d / %0d LBU requested wrong memory address. Expected: %0b | Observed: %0b", 
+                         i, N_runs_per_inst, (reg_data_out_1_to_alu + {{20{imm[11]}}, imm}), memory_addr);
+            end
+            
+            // 5. Provide simulated memory data for Execute 2[cite: 8]
+            raw_data_from_mem = mem_val;
+            #1; // Emulate memory read latency
+            
+            @(posedge CLK); // Enter Execute 2 state[cite: 8]
+            mem_ready = 1;
+            
+            @(posedge CLK);
+            mem_ready = 0;
+            
+            #1; // Settling time
+            
+            // 6. Verify zero-extended byte data output (x[rd] = zeroext(MEM[x[rs1]+imm][7:0]))[cite: 5]
+            if (Data_from_mem === {24'b0, mem_val[7:0]}) begin
+                $display("[PASS] %0d / %0d LBU zero-extension correct", i, N_runs_per_inst);
+            end else begin
+                $display("[FAILED] %0d / %0d LBU Failed to zero extend. Expected: %0h | Observed: %0h", 
+                         i, N_runs_per_inst, {24'b0, mem_val[7:0]}, Data_from_mem);
+            end
+        end
+    end
+    endtask
+    
+task automatic validate_LHU();
+    begin
+        $display("Testing the LHU instruction, Will perform %0d iterations", N_runs_per_inst);
+        
+        for (int i = 1; i <= N_runs_per_inst; i++) begin
+            
+            logic [4:0]  rs1     = $urandom_range(1, 31); 
+            logic [4:0]  rd      = $urandom_range(1, 31);
+            logic [11:0] imm     = $urandom_range(0, 100);
+            logic [31:0] mem_val = $urandom();
+             
+            // 1. Reset and disable clock
+            rst_n   = 0;
+            clk_off = 1;
+            
+            // 2. Load instruction into memory (I-type Load Halfword Unsigned format)[cite: 2, 3, 5]
+            raw_data_from_mem[6:0]   = 7'b0000011; // Opcode for loads[cite: 5]
+            raw_data_from_mem[11:7]  = rd;         // Destination reg[cite: 2, 3]
+            raw_data_from_mem[14:12] = 3'b101;     // func3 for LHU[cite: 5]
+            raw_data_from_mem[19:15] = rs1;        // Source reg (base address)[cite: 2, 3]
+            raw_data_from_mem[31:20] = imm;        // 12-bit signed immediate offset[cite: 2, 3]
+            
+            #1;
+            rst_n   = 1;
+            clk_off = 0;
+            #5;
+            
+            // Instruction ready. Allow for loading into IR for the next rising edge
+            @(posedge CLK);
+            mem_ready = 1;
+            
+            // Read data from memory into IR.
+            @(posedge CLK);
+            
+            // Now Check if the mem_address is updated
+            @(posedge CLK);
+            mem_ready = 0;
+            
+            // In the next pos edge the memory address source is updated.
+            @(posedge CLK);
+            // Verify computed memory address
+            if (memory_addr === (reg_data_out_1_to_alu + {{20{imm[11]}}, imm})) begin  
+                $display("[PASS] %0d / %0d LHU requested correct memory address.", i, N_runs_per_inst);
+            end else begin
+                $display("[FAILED] %0d / %0d LHU requested wrong memory address. Expected: %0b | Observed: %0b", 
+                         i, N_runs_per_inst, (reg_data_out_1_to_alu + {{20{imm[11]}}, imm}), memory_addr);
+            end
+            
+            // 5. Provide simulated memory data for Execute 2[cite: 8]
+            raw_data_from_mem = mem_val;
+            #1; // Emulate memory read latency
+            
+            @(posedge CLK); // Enter Execute 2 state[cite: 8]
+            mem_ready = 1;
+            
+            @(posedge CLK);
+            mem_ready = 0;
+            
+            #1; // Settling time
+            
+            // 6. Verify zero-extended halfword data output (x[rd] = zeroext(MEM[x[rs1]+imm][15:0]))[cite: 5]
+            if (Data_from_mem === {16'b0, mem_val[15:0]}) begin
+                $display("[PASS] %0d / %0d LHU zero-extension correct", i, N_runs_per_inst);
+            end else begin
+                $display("[FAILED] %0d / %0d LHU Failed to zero extend. Expected: %0h | Observed: %0h", 
+                         i, N_runs_per_inst, {16'b0, mem_val[15:0]}, Data_from_mem);
             end
         end
     end
@@ -861,6 +1151,14 @@ module Instructions_tb(
         validate_SRLI();
         
         validate_LB();
+        
+        validate_LH();
+        
+        validate_LW();
+        
+        validate_LBU();
+        
+        validate_LHU();
         $finish;
     end
     

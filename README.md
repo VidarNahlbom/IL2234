@@ -48,9 +48,8 @@ Testing is preformed using one of the three test benches
 * **ALU_tb.sv**
 
 ### Register
-#### Module Descriptions
 
-##### 1. `register_block` Module
+#### 1. `register_block` Module
 
 The `register_block` module represents a single parameterizable $D$ flip-flop-based register designed to store data of width `BW`. It handles synchronous state storage with an asynchronous active-low reset (`rst_n`).
 
@@ -60,7 +59,7 @@ The `register_block` module represents a single parameterizable $D$ flip-flop-ba
 
 ---
 
-##### 2. `register_file` Module
+#### 2. `register_file` Module
 
 The `register_file` module acts as a multi-port register array simulating the register bank of a RISC-V core. It instantiates `DEPTH - 1` instances of `register_block` using a `generate` loop to form an addressable register set parameterized by data width (`BW`) and register depth (`DEPTH`).
 
@@ -71,9 +70,8 @@ The `register_file` module acts as a multi-port register array simulating the re
 
 ---
 
-#### Interface Pinout Tables
 
-##### `register_block` Pinout Table
+#### `register_block` Pinout Table
 
 | Pin Name | Direction | Bit Width | Description |
 | --- | --- | --- | --- |
@@ -86,7 +84,7 @@ The `register_file` module acts as a multi-port register array simulating the re
 
 ---
 
-##### `register_file` Pinout Table
+#### `register_file` Pinout Table
 
 | Pin Name | Direction | Bit Width | Description |
 | --- | --- | --- | --- |
@@ -107,9 +105,8 @@ The `register_file` module acts as a multi-port register array simulating the re
 Testing is preformed using `register_file_tb.sv`
 
 ### Memory
-#### Module Description
 
-###### `memory_controller` Module
+#### `memory_controller` Module
 
 The `memory_controller` module acts as an interface wrapper around a single-port word-addressable block RAM (`SRAM`) macro on a Xilinx FPGA. It converts a byte-level 16-bit address space into word-aligned memory accesses and provides a handshaking signal (`mem_ready`) to synchronize memory requests with the processor core.
 
@@ -122,9 +119,8 @@ The `memory_controller` module acts as an interface wrapper around a single-port
 
 ---
 
-#### Interface Pinout Table
 
-##### `memory_controller` Pinout Table
+#### `memory_controller` Pinout Table
 
 | Pin Name | Direction | Bit Width | Description |
 | --- | --- | --- | --- |
@@ -136,3 +132,188 @@ The `memory_controller` module acts as an interface wrapper around a single-port
 | `write_en` | Input | 4 bits | Byte-wise active-high write enable mask (e.g., `4'b0001` writes byte 0; `4'b0000` for reads). |
 | `read_en` | Input | 1 bit | Active-high read request enable signal. |
 | `mem_ready` | Output | 1 bit | Handshake output signal; indicates requested read/write access is complete. |
+
+### Controller (`controller`)
+
+#### Description
+
+The `controller` module serves as the primary multi-cycle control unit (Finite State Machine) for the RISC-V processor. It processes instructions by decoding the `opcode`, `func3`, and `func7` fields received from the `Decoder`, along with condition evaluation flags (such as `alu_zero`) from the `ALU`. It manages the execution flow across three FSM states (`Fetch`, `Execute1`, and `Execute2`) and generates datapath control signals to sequence instruction execution:
+
+* **FSM Sequencing:** Coordinates memory wait states during instruction fetch (`Fetch`) and memory load/store operations (`Execute2`) by evaluating `mem_ready` handshakes.
+
+
+* **ALU & Branch Control:** Determines ALU operations (`alu_opcode`), operand selections (`alu_b_src`), and branch outcomes (`pc_src`) based on conditions like `BEQ`, `BNE`, `BLT`, `BGE`, `BLTU`, and `BGEU`.
+
+
+* **Write & Multiplexer Control:** Controls Register File write enables (`rf_write_en_n`), source selection multiplexers (`rf_write_src`), Program Counter updates (`pc_write_en`), Instruction Register loading (`ir_write_en`), and memory access routing (`mem_addr_src`, `mem_read_en`, `mem_write_unit_en`).
+
+---
+
+#### Pinout Table
+
+| Pin Name | Direction | Bit Width | Description |
+| --- | --- | --- | --- |
+| `clk` | Input | 1 bit | Clock input for FSM state transitions.|
+| `rst_n` | Input | 1 bit | Active-low asynchronous reset for FSM. |
+| `mem_ready` | Input | 1 bit | Memory controller ready handshake signal. |
+| `opcode` | Input | 7 bits | Instruction opcode field from `Decoder`. |
+| `func3` | Input | 3 bits | Instruction `func3` field from `Decoder`.
+| `func7` | Input | 7 bits | Instruction `func7` field from `Decoder`.
+| `alu_zero` | Input | 1 bit | Zero status flag from ALU (`flags[0]`).
+| `rf_chip_en` | Output | 1 bit | Register file chip enable control signal.
+| `rf_write_en_n` | Output | 1 bit | Active-low write enable signal for Register File.
+| `mem_addr_src` | Output | 1 bit | Memory address mux control (0: PC, 1: ALU result).
+| `mem_write_unit_en` | Output | 1 bit | Enable control signal for `memory_write_unit`.
+| `mem_read_en` | Output | 1 bit | Enable signal for memory read operations.
+| `ir_write_en` | Output | 1 bit | Write enable for `instruction_register`.
+| `pc_write_en` | Output | 1 bit | Write enable for `program_counter` register.
+| `rf_write_src` | Output | 2 bits | RF write-back data mux control (00: ALU, 01: Mem, 10: PC+4, 11: PC+imm).
+| `alu_b_src` | Output | 1 bit | ALU operand B mux control (0: `rs2_data`, 1: `imm`).
+| `alu_opcode` | Output | 4 bits | Operation selection code driven to ALU.
+| `pc_src` | Output | 2 bits | Next PC source mux control (00: PC+4, 01: PC+imm, 10: JALR target).
+
+
+---
+
+### Decoder (`Decoder`)
+
+#### Description
+
+The `Decoder` module is a combinational instruction decoding unit that parses 32-bit RISC-V instruction words (`data_in`) into architectural instruction fields and immediate values.
+
+* **Field Extraction:** Unpacks bit fields including `opcode`, destination register (`rd`), source registers (`rs1`, `rs2`), and function selectors (`func3`, `func7`).
+
+
+* **Immediate Generation:** Formats and sign-extends immediate operands (`imm`) according to RISC-V instruction type specifications:
+
+
+* **I-type / Loads / JALR:** 12-bit sign-extended immediate.
+
+
+* **U-type (`LUI`, `AUIPC`):** 20-bit upper immediate zero-padded in the lower 12 bits.
+
+
+* **S-type (Stores):** Reassembled 12-bit split sign-extended immediate.
+
+
+* **SB-type (Branches):** Reassembled 13-bit sign-extended immediate with `imm[0] = 0`.
+
+
+* **UJ-type (`JAL`):** Reassembled 21-bit sign-extended immediate with `imm[0] = 0`.
+
+
+#### Pinout Table
+
+| Pin Name | Direction | Bit Width | Description |
+| --- | --- | --- | --- |
+| `data_in` | Input | 32 bits | Raw 32-bit instruction word from `instruction_register`. |
+| `opcode` | Output | 7 bits | Instruction opcode output (bits [6:0]). |
+| `rd` | Output | 5 bits | Destination register index output (bits [11:7]). |
+| `func3` | Output | 3 bits | Instruction sub-function code output (bits). |
+| `rs1` | Output | 5 bits | Source register 1 index output (bits). |
+| `rs2` | Output | 5 bits | Source register 2 index output (bits). |
+| `func7` | Output | 7 bits | Instruction extended function code output (bits). |
+| `imm` | Output | 32 bits | Extracted and sign-extended immediate payload. |
+
+
+---
+
+### Instruction Register (`instruction_register`)
+
+#### Description
+
+The `instruction_register` module is a synchronous 32-bit register holding the current instruction word fetched from memory. It updates on the rising edge of `clk` when enabled by `ir_write_en` (asserted by the `controller` when valid memory data is ready) and asynchronously resets to `0x0000_0000` via active-low `rst_n`.
+
+#### Pinout Table
+
+| Pin Name | Direction | Bit Width | Description |
+| --- | --- | --- | --- |
+| `clk` | Input | 1 bit | System clock input.
+| `rst_n` | Input | 1 bit | Active-low asynchronous reset.
+| `ir_write_en` | Input | 1 bit | Write enable from `controller`.
+| `ir_in` | Input | 32 bits | Read instruction word from memory.
+| `ir_out` | Output | 32 bits | Latched instruction word driven to `Decoder`.
+
+
+---
+
+### Memory Load Unit (`memory_load_unit`)
+
+#### Description
+
+The `memory_load_unit` module is a combinational alignment and sign/zero-extension circuit that formats data loaded from memory before driving the Register File input multiplexer.
+
+* **Byte/Halfword Selection:** Evaluates the lower address bits (`addr_lo = ALU_out[1:0]`) to select the targeted byte lane (`byte_sel`) or halfword lane (`half_sel`) within a 32-bit memory word (`mem_data`).
+
+
+* **Format Extension:** Uses `func3` to execute byte (`LB`), halfword (`LH`), and word (`LW`) signed extensions, as well as zero-extended unsigned loads (`LBU`, `LHU`).
+
+
+
+#### Pinout Table
+
+| Pin Name | Direction | Bit Width | Description |
+| --- | --- | --- | --- |
+| `mem_data` | Input | 32 bits | Raw 32-bit word read from memory.
+| `addr_lo` | Input | 2 bits | Lower 2 bits of target address (`ALU_out[1:0]`) for byte offset.
+| `func3` | Input | 3 bits | Load width/sign specification (`LB`, `LH`, `LW`, `LBU`, `LHU`).
+| `load_data` | Output | 32 bits | Aligned and sign/zero-extended word output for Register File.
+
+
+---
+
+### Memory Write Unit (`memory_write_unit`)
+
+#### Description
+
+The `memory_write_unit` module is a combinational alignment unit that formats store data (`rs2_data`) and computes byte-level write enable masks (`write_en`) for memory store operations.
+
+* **Write Mask Generation:** Translates `func3` (`SB`, `SH`, `SW`) and byte offset (`addr_lo = ALU_out[1:0]`) into a 4-bit active-high byte write mask (`write_en`).
+
+
+* **Lane Replication:** Replicates source byte or halfword values across all byte lanes of `data_out` (e.g., 4x byte replication for `SB`, 2x halfword replication for `SH`) so that memory write controllers can commit byte-masked writes correctly regardless of word offset.
+
+
+
+#### Pinout Table
+
+| Pin Name | Direction | Bit Width | Description |
+| --- | --- | --- | --- |
+| `mem_write` | Input | 1 bit | Master write enable signal from `controller`.
+| `addr_lo` | Input | 2 bits | Lower 2 bits of target address (`ALU_out[1:0]`) for byte offset.
+| `func3` | Input | 3 bits | Store size specification (`SB`, `SH`, `SW`).
+| `rs2_data` | Input | 32 bits | Store payload read from Register File port 2.
+| `data_out` | Output | 32 bits | Byte/halfword lane-replicated data bus to memory.
+| `write_en` | Output | 4 bits | Byte-wise write enable mask driven to memory controller.
+
+---
+
+### Program Counter (`program_counter`)
+
+#### Description
+
+The `program_counter` module maintains and calculates the 32-bit Instruction Pointer (PC) for the processor.
+
+* **Dedicated Adders:** Continuously computes sequential PC (`pc_plus_4 = pc_out + 4`) and branch target PC (`pc_plus_imm = pc_out + imm`).
+
+
+* **Next PC Selection (`pc_src`):** Selects `pc_next` from `pc_plus_4` (sequential), `pc_plus_imm` (`JAL` and taken branches), or `{alu_out[31:2], 2'b00}` (`JALR` with 2-bit alignment masking).
+
+
+* **State Update:** Updates `pc_out` on `posedge clk` when enabled by `pc_write_en`, with asynchronous reset clearing `pc_out` to `0x0000_0000` on `negedge rst_n`.
+
+
+
+#### Pinout Table
+
+| Pin Name | Direction | Bit Width | Description |
+| --- | --- | --- | --- |
+| `clk` | Input | 1 bit | System clock input.
+| `rst_n` | Input | 1 bit | Active-low asynchronous reset.
+| `pc_write_en` | Input | 1 bit | Write update enable signal from `controller`.
+| `pc_src` | Input | 2 bits | Next PC source select signal from `controller`.
+| `imm` | Input | 32 bits | Sign-extended branch/jump target immediate from `Decoder`.
+| `alu_out` | Input | 32 bits | Calculated jump address from ALU (used for `JALR`).
+| `pc_out` | Output | 32 bits | Active Program Counter output address.
+| `pc_plus_4` | Output | 32 bits | Incremented PC value (`PC + 4`) for sequential flow/link register.
+| `pc_plus_imm` | Output | 32 bits | Target PC value (`PC + imm`) for branch/`JAL`.
