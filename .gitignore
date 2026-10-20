@@ -41,3 +41,4 @@
 !project/top/urbana_top.sv
 !project/top/Instructions_tb.sv
 !project/top/cpu_top_tb.sv
+!urbana.xdc

@@ -52,7 +52,7 @@ module urbana_top (
     //LED controlled by fpga_diaplsy
     logic[14:0] LED_status;
     clock_divider #(
-    .DIVISOR(5000000)
+    .DIVISOR(369200) // timer for program
 ) cpu_clock_divider (
     .rst_n(rst_n),
     .clk_in(CLK_100MHZ),
@@ -80,7 +80,7 @@ module urbana_top (
         .mem_debug_write(mem_debug_write),
         .read_en_debug(read_en_debug),
         .mem_ready_debug(mem_ready_debug),
-        .pc_write_en_debug(pc_write_en_debug),
+        //.pc_write_en_debug(pc_write_en_debug),
         .LED(LED_status),
         .D0_AN(D0_AN),
         .D0_SEG(D0_SEG),
@@ -90,13 +90,13 @@ module urbana_top (
     );   
     
     assign LED[15:1] = LED_status;
-
+    assign LED[0] = cpu_clk;
     // instantiate clock divider
-    clock_divider #(
-        .DIVISOR(100000000)
-        ) clock_divider_inst (
-        .rst_n(~BTN[0]),
-        .clk_in(CLK_100MHZ),
-        .clk_out(LED[0])
-    );
+    //clock_divider #(
+    //    .DIVISOR(50000000) // timer for display 
+    //    ) clock_divider_inst (
+    //    .rst_n(~BTN[0]),
+    //    .clk_in(CLK_100MHZ),
+    //    .clk_out(LED[0])
+    //);
 endmodule
